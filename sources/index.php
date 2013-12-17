@@ -399,6 +399,10 @@ function ban_canLogin()
     return true; // User is not banned.
 }
 
+/*
+ * Don't use the default Shaarli login mechanism.
+ * Rely on Yunohost SSO providing auth credentials to identify logged in users
+ *
 // ------------------------------------------------------------------------------------------
 // Process login form: Check if login/password is correct.
 if (isset($_POST['login']))
@@ -441,6 +445,48 @@ if (isset($_POST['login']))
         echo '<script language="JavaScript">alert("Wrong login/password.");document.location=\'?do=login'.$redir.'\';</script>'; // Redirect to login screen.
         exit;
     }
+}
+*/
+
+/*
+ * If user initiated its session while logged in SSO,
+ * then loggued out of SSO, then log out from Shaarli too
+ */
+if (!isset($_SERVER['PHP_AUTH_USER']))
+{
+    logout();
+}
+
+/*
+ * If user initiated its session while logged in SSO,
+ * then loggued out of SSO,
+ * and a different user loggued in to SSO,
+ * then reset session
+ */
+if (isLoggedIn() && isset($_SERVER['PHP_AUTH_USER']) && $_SERVER['PHP_AUTH_USER'] != $_SESSION['username'])
+{
+    logout();
+}
+
+/*
+ * If user is not yet loggued in to Shaarli, but loggued in to SSO,
+ * then initiate a Shaarli session
+ * TODO : longlastingsession not handled yet
+ */
+if (!isLoggedIn() && isset($_SERVER['PHP_AUTH_USER']))
+{
+    // Standard session expiration (=when browser closes)
+    $cookiedir = ''; if(dirname($_SERVER['SCRIPT_NAME'])!='/') $cookiedir=dirname($_SERVER["SCRIPT_NAME"]).'/';
+    session_set_cookie_params(0,$cookiedir,$_SERVER['SERVER_NAME']); // 0 means "When browser closes"
+    session_regenerate_id(true);
+
+    // Login/password is correct.
+    $_SESSION['uid'] = sha1(uniqid('',true).'_'.mt_rand()); // generate unique random number (different than phpsessionid)
+    $_SESSION['ip'] = allIPs();                // We store IP address(es) of the client to make sure session is not hijacked.
+    $_SESSION['username'] = $_SERVER['PHP_AUTH_USER'];
+    $_SESSION['level'] = $GLOBALS['level'][$_SESSION['username']];
+    $_SESSION['email'] = $GLOBALS['email'][$_SESSION['username']];
+    $_SESSION['expires_on']=time()+INACTIVITY_TIMEOUT;  // Set session expiration.
 }
 
 // ------------------------------------------------------------------------------------------

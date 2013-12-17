@@ -9,11 +9,11 @@
 {else}
     <a href="?" class="nomobile">Home</a>
     {if="isLoggedIn()"}
-        <a href="?do=logout">Logout <i>({$currentUser})</i></a><a href="?do=tools">Tools</a><a href="?do=addlink"><b>Add link</b></a>
+        <a href="?">Logged in as <i>{$currentUser}</i></a><a href="?do=tools">Tools</a><a href="?do=addlink"><b>Add link</b></a>
     {elseif="$GLOBALS['config']['OPEN_SHAARLI']"}
         <a href="?do=tools">Tools</a><a href="?do=addlink"><b>Add link</b></a>
     {else}
-        <a href="?do=login">Login</a>
+        <!-- <a href="?do=login">Login</a> -->
     {/if}
     <a href="{$feedurl}?do=rss{$searchcrits}" class="nomobile">RSS Feed</a>
     <a href="{$feedurl}?do=atom{$searchcrits}" style="padding-left:10px;" class="nomobile">ATOM Feed</a>
