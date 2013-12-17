@@ -14,13 +14,12 @@
 	        <i>Title</i><br><input type="text" name="lf_title" value="{$link.title|htmlspecialchars}" style="width:100%"><br>
 	        <i>Description</i><br><textarea name="lf_description" rows="4" cols="25" style="width:100%">{$link.description|htmlspecialchars}</textarea><br>
 	        <i>Tags</i><br><input type="text" id="lf_tags" name="lf_tags" value="{$link.tags|htmlspecialchars}" style="width:100%"><br>
-	        {if condition="($link_is_new && $GLOBALS['privateLinkByDefault']==true) || $link.private == true"}
-            <input type="checkbox" checked="checked" name="lf_private" id="lf_private">
-            &nbsp;<label for="lf_private"><i>Private</i></label><br>
-            {else}
-            <input type="checkbox"  name="lf_private" id="lf_private">
-            &nbsp;<label for="lf_private"><i>Private</i></label><br>
-            {/if}
+            &nbsp;<label for="lf_private"><i>State of your link</i></label><br>
+            <select name="lf_private" id="lf_private">
+                <option value="2"{if condition="($link_is_new && $GLOBALS['privateLinkByDefault']==true) || $link.private == 2"} selected{/if}>Private</option>
+                <option value="1"{if condition="$link.private == 1"} selected{/if}>Collaborators</option>
+                <option value="0">Public</option>
+            </select>
 	        <input type="submit" value="Save" name="save_edit" class="bigbutton" style="margin-left:40px;">
 	        <input type="submit" value="Cancel" name="cancel_edit" class="bigbutton" style="margin-left:40px;">
 	        {if condition="!$link_is_new"}<input type="submit" value="Delete" name="delete_link" class="bigbutton" style="margin-left:180px;" onClick="return confirmDeleteLink();">{/if}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>{include="includes"}</head>
+<body>
+<div id="pageheader">
+	{include="page.header"}
+</div>
+<div id="manageusers">
+<form method="GET" name="edituser" id="createuserbadge">
+<h4>New user</h4>
+<input type="hidden" name="do" value="saveUser">
+<input type="text" name="username" value="" placeholder="username">
+    <select name="userlevel" id="eu_level">
+        <option value="4">Administrator</option>
+        <option value="3">Moderator</option>
+        <option value="2">Contributor</option>
+        <option value="1" selected>Reader</option>
+    </select>
+    <input type="text" name="email" value="" placeholder="email">
+    <input type="submit" name="createUser" value="create user" class="updateuser">
+</form>
+{loop="users"}
+<form method="GET" name="edituser" class="userBadge {if="$value.username === $shaarliOwner"}sysadmin{/if}">
+    <h4>{$value.username}</h4>
+    <input type="hidden" name="do" value="saveUser">
+    <input type="hidden" name="username" value="{$value.username}">
+    <select name="userlevel" id="userlevel">
+        <option value="4"{if="$value.level == 4"} selected{/if}>Administrator</option>
+        <option value="3"{if="$value.level == 3"} selected{/if}>Moderator</option>
+        <option value="2"{if="$value.level == 2"} selected{/if}>Contributor</option>
+        <option value="1"{if="$value.level == 1"} selected{/if}>Reader</option>
+    </select>
+    <input type="text" name="email" value="{$value.email}">
+    <input type="submit" name="updateUser" value="update card" class="updateuser">
+    <input type="submit" name="resetPassword" value="reset pass" class="smallsubmit resetpassword">
+    <input type="submit" name="deleteUser" value="delete user" class="smallsubmit deleteuser" {if="$value.username === $shaarliOwner"}disabled{/if} onClick="return confirm('Do you really want to delete {$value.username} ?')">
+</form>
+{/loop}
+<div class="clear"></div>
+</div>
+    {include="page.footer"}
+</body>
+</html>

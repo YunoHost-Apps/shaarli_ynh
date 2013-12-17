@@ -5,6 +5,11 @@
 // Licence: http://www.opensource.org/licenses/zlib-license.php
 // Requires: php 5.1.x  (but autocomplete fields will only work if you have php 5.2.x)
 // -----------------------------------------------------------------------------------------------
+// NEVER TRUST IN PHP.INI
+// Some hosts do not define a default timezone in php.ini,
+// so we have to do this for avoid the strict standard error.
+date_default_timezone_set('UTC');
+// -----------------------------------------------------------------------------------------------
 // Hardcoded parameter (These parameters can be overwritten by creating the file /config/options.php)
 $GLOBALS['config']['DATADIR'] = 'data'; // Data subdirectory
 $GLOBALS['config']['CONFIG_FILE'] = $GLOBALS['config']['DATADIR'].'/config.php'; // Configuration file (user login/password)
@@ -15,6 +20,7 @@ $GLOBALS['config']['BAN_AFTER'] = 4;        // Ban IP after this many failures.
 $GLOBALS['config']['BAN_DURATION'] = 1800;  // Ban duration for IP address after login failures (in seconds) (1800 sec. = 30 minutes)
 $GLOBALS['config']['OPEN_SHAARLI'] = false; // If true, anyone can add/edit/delete links without having to login
 $GLOBALS['config']['HIDE_TIMESTAMPS'] = false; // If true, the moment when links were saved are not shown to users that are not logged in.
+$GLOBALS['config']['HIDE_QRCODE'] = false; // If true, qrcodes are not shown.
 $GLOBALS['config']['ENABLE_THUMBNAILS'] = true; // Enable thumbnails in links.
 $GLOBALS['config']['CACHEDIR'] = 'cache'; // Cache directory for thumbnails for SLOW services (like flickr)
 $GLOBALS['config']['PAGECACHE'] = 'pagecache'; // Page cache directory.
@@ -23,6 +29,13 @@ $GLOBALS['config']['PUBSUBHUB_URL'] = ''; // PubSubHubbub support. Put an empty 
 $GLOBALS['config']['UPDATECHECK_FILENAME'] = $GLOBALS['config']['DATADIR'].'/lastupdatecheck.txt'; // For updates check of Shaarli.
 $GLOBALS['config']['UPDATECHECK_INTERVAL'] = 86400 ; // Updates check frequency for Shaarli. 86400 seconds=24 hours
                                           // Note: You must have publisher.php in the same directory as Shaarli index.php
+// // -----------------------------------------------------------------------------------------------
+// Levels for multi users
+$GLOBALS['level']['administrator'] = 4;
+$GLOBALS['level']['moderator'] = 3;
+$GLOBALS['level']['contributor'] = 2;
+$GLOBALS['level']['reader'] = 1;
+
 // -----------------------------------------------------------------------------------------------
 // You should not touch below (or at your own risks !)
 // Optionnal config file.
@@ -103,7 +116,7 @@ if (empty($GLOBALS['privateLinkByDefault'])) $GLOBALS['privateLinkByDefault']=fa
 if (!is_file($GLOBALS['config']['CONFIG_FILE'])) install();
 
 require $GLOBALS['config']['CONFIG_FILE'];  // Read login/password hash into $GLOBALS.
-
+define('SHAARLI_OWNER', $GLOBALS['login'][0]);
 
 autoLocale(); // Sniff browser language and set date format accordingly.
 header('Content-Type: text/html; charset=utf-8'); // We use UTF-8 for proper international characters handling.
@@ -292,19 +305,26 @@ function allIPs()
 }
 
 // Check that user/password is correct.
-function check_auth($login,$password)
+function check_auth($username,$password)
 {
-    $hash = sha1($password.$login.$GLOBALS['salt']);
-    if ($login==$GLOBALS['login'] && $hash==$GLOBALS['hash'])
-    {   // Login/password is correct.
-        $_SESSION['uid'] = sha1(uniqid('',true).'_'.mt_rand()); // generate unique random number (different than phpsessionid)
-        $_SESSION['ip']=allIPs();                // We store IP address(es) of the client to make sure session is not hijacked.
-        $_SESSION['username']=$login;
-        $_SESSION['expires_on']=time()+INACTIVITY_TIMEOUT;  // Set session expiration.
-        logm('Login successful');
-        return True;
+    //$currentHash = sha1($password.$username.$GLOBALS['salt']);
+    if (is_array($GLOBALS['login']))
+    {
+        if (in_array($username, $GLOBALS['login'])) {
+            if ($GLOBALS['password'][$username] === sha1($password . $username . $GLOBALS['salt'])) {
+                // Login/password is correct.
+                $_SESSION['uid'] = sha1(uniqid('',true).'_'.mt_rand()); // generate unique random number (different than phpsessionid)
+                $_SESSION['ip'] = allIPs();                // We store IP address(es) of the client to make sure session is not hijacked.
+                $_SESSION['username'] = $username;
+                $_SESSION['level'] = $GLOBALS['level'][$username];
+                $_SESSION['email'] = $GLOBALS['email'][$username];
+                $_SESSION['expires_on']=time()+INACTIVITY_TIMEOUT;  // Set session expiration.
+                logm('Login successful');
+                return True;
+            }
+        }
     }
-    logm('Login failed for user '.$login);
+    logm('Login failed for user '.$username);
     return False;
 }
 
@@ -328,7 +348,7 @@ function isLoggedIn()
 }
 
 // Force logout.
-function logout() { if (isset($_SESSION)) { unset($_SESSION['uid']); unset($_SESSION['ip']); unset($_SESSION['username']); unset($_SESSION['privateonly']); }  }
+function logout() { if (isset($_SESSION)) { unset($_SESSION['uid']); unset($_SESSION['ip']); unset($_SESSION['username']); unset($_SESSION['level']); unset($_SESSION['privateonly']); }  }
 
 
 // ------------------------------------------------------------------------------------------
@@ -636,6 +656,7 @@ class pageBuilder
         $this->tpl->assign('version',shaarli_version);
         $this->tpl->assign('scripturl',indexUrl());
         $this->tpl->assign('pagetitle','Shaarli');
+        $this->tpl->assign('shaarliOwner', SHAARLI_OWNER);
         $this->tpl->assign('privateonly',!empty($_SESSION['privateonly'])); // Show only private links ?
         if (!empty($GLOBALS['title'])) $this->tpl->assign('pagetitle',$GLOBALS['title']);
         if (!empty($GLOBALS['pagetitle'])) $this->tpl->assign('pagetitle',$GLOBALS['pagetitle']);
@@ -647,6 +668,7 @@ class pageBuilder
     public function assign($what,$where)
     {
         if ($this->tpl===false) $this->initialize(); // Lazy initialization
+        $this->initializeUser();
         $this->tpl->assign($what,$where);
     }
 
@@ -656,6 +678,28 @@ class pageBuilder
     {
         if ($this->tpl===false) $this->initialize(); // Lazy initialization
         $this->tpl->draw($page);
+    }
+
+    private function initializeUser()
+    {
+        if (!empty($_SESSION['username'])) {
+            $this->tpl->assign('currentUser',$_SESSION['username']);
+        }
+        else {
+            $this->tpl->assign('currentUser','');
+        }
+        if (!empty($_SESSION['level'])) {
+            $this->tpl->assign('currentUserLevel',$_SESSION['level']);
+        }
+        else {
+            $this->tpl->assign('currentUserLevel','');
+        }
+        if (!empty($_SESSION['email'])) {
+            $this->tpl->assign('currentUserEmail',$_SESSION['email']);
+        }
+        else {
+            $this->tpl->assign('currentUserEmail','');
+        }
     }
 }
 
@@ -688,7 +732,8 @@ class linkdb implements Iterator, Countable, ArrayAccess
     private $keys;  // List of linkdate keys (for the Iterator interface implementation)
     private $position; // Position in the $this->keys array. (for the Iterator interface implementation.)
     private $loggedin; // Is the used logged in ? (used to filter private links)
-
+    public static $editLink; // If user edit link (preserve private links)
+    
     // Constructor:
     function __construct($isLoggedIn)
     // Input : $isLoggedIn : is the used logged in ?
@@ -732,9 +777,11 @@ class linkdb implements Iterator, Countable, ArrayAccess
         if (!file_exists($GLOBALS['config']['DATASTORE'])) // Create a dummy database for example.
         {
              $this->links = array();
-             $link = array('title'=>'Shaarli - sebsauvage.net','url'=>'http://sebsauvage.net/wiki/doku.php?id=php:shaarli','description'=>'Welcome to Shaarli ! This is a bookmark. To edit or delete me, you must first login.','private'=>0,'linkdate'=>'20110914_190000','tags'=>'opensource software');
+             $link = array('title'=>'Shaarli - sebsauvage.net','url'=>'http://sebsauvage.net/wiki/doku.php?id=php:shaarli','description'=>'Welcome to Shaarli ! This is a bookmark. To edit or delete me, you must first login.','author'=>SHAARLI_OWNER, 'private'=>'0','linkdate'=>'20110914_190000','tags'=>'opensource software');
              $this->links[$link['linkdate']] = $link;
-             $link = array('title'=>'My secret stuff... - Pastebin.com','url'=>'http://pastebin.com/smCEEeSn','description'=>'SShhhh!!  I\'m a private link only YOU can see. You can delete me too.','private'=>1,'linkdate'=>'20110914_074522','tags'=>'secretstuff');
+             $link = array('title'=>'My secret stuff... - Pastebin.com','url'=>'http://pastebin.com/smCEEeSn','description'=>'SShhhh!!  I\'m a private link only YOU can see. You can delete me too.','author'=>SHAARLI_OWNER, 'private'=>'2','linkdate'=>'20110914_074522','tags'=>'secretstuff');
+             $this->links[$link['linkdate']] = $link;
+             $link = array('title'=>'Contributor link','url'=>'http://sebsauvage.net','description'=>'Here is a link viewed only by contributors and logged user.','author'=>SHAARLI_OWNER, 'private'=>'1','linkdate'=>'20111007_233200','tags'=>'contributor link');
              $this->links[$link['linkdate']] = $link;
              file_put_contents($GLOBALS['config']['DATASTORE'], PHPPREFIX.base64_encode(gzdeflate(serialize($this->links))).PHPSUFFIX); // Write database to disk
         }
@@ -744,17 +791,29 @@ class linkdb implements Iterator, Countable, ArrayAccess
     private function readdb()
     {
         // Read data
-        $this->links=(file_exists($GLOBALS['config']['DATASTORE']) ? unserialize(gzinflate(base64_decode(substr(file_get_contents($GLOBALS['config']['DATASTORE']),strlen(PHPPREFIX),-strlen(PHPSUFFIX))))) : array() );
+        $links=(file_exists($GLOBALS['config']['DATASTORE']) ? unserialize(gzinflate(base64_decode(substr(file_get_contents($GLOBALS['config']['DATASTORE']),strlen(PHPPREFIX),-strlen(PHPSUFFIX))))) : array() );
         // Note that gzinflate is faster than gzuncompress. See: http://www.php.net/manual/en/function.gzdeflate.php#96439
 
         // If user is not logged in, filter private links.
         if (!$this->loggedin)
         {
             $toremove=array();
-            foreach($this->links as $link) { if ($link['private']!=0) $toremove[]=$link['linkdate']; }
-            foreach($toremove as $linkdate) { unset($this->links[$linkdate]); }
+            foreach($links as $link) { if ($link['private']!=0) $toremove[]=$link['linkdate']; }
+            foreach($toremove as $linkdate) { unset($links[$linkdate]); }
+            $this->links = $links;
         }
-
+        // If user edit a link, preserve private links of others.
+        elseif (self::$editLink)
+        {
+            $this->links = $links;
+        }
+        // If user is logged in, filter private links.
+        else {
+            $toremove=array();
+            foreach($links as $link) { if ($link['private']!=0 && ($link['private']==2 && $link['author'] != $_SESSION['username'])) $toremove[]=$link['linkdate']; }
+            foreach($toremove as $linkdate) { unset($links[$linkdate]); }
+            $this->links = $links;
+        }
         // Keep the list of the mapping URLs-->linkdate up-to-date.
         $this->urls=array();
         foreach($this->links as $link) { $this->urls[$link['url']]=$link['linkdate']; }
@@ -764,7 +823,7 @@ class linkdb implements Iterator, Countable, ArrayAccess
     public function savedb()
     {
         if (!$this->loggedin) die('You are not authorized to change the database.');
-        file_put_contents($GLOBALS['config']['DATASTORE'], PHPPREFIX.base64_encode(gzdeflate(serialize($this->links))).PHPSUFFIX);
+        file_put_contents($GLOBALS['config']['DATASTORE'], PHPPREFIX.base64_encode(gzdeflate(serialize($this->links))).PHPSUFFIX, LOCK_EX);
         invalidateCaches();
     }
 
@@ -1166,8 +1225,8 @@ function showDaily()
 // Render HTML page (according to URL parameters and user rights)
 function renderPage()
 {
+    if (isset($_POST['save_edit'])) linkdb::$editLink = TRUE;
     $LINKSDB=new linkdb(isLoggedIn() || $GLOBALS['config']['OPEN_SHAARLI']);  // Read links from database (and filter private links if used it not logged in).
-
     // -------- Display login form.
     if (isset($_SERVER["QUERY_STRING"]) && startswith($_SERVER["QUERY_STRING"],'do=login'))
     {
@@ -1335,11 +1394,11 @@ function renderPage()
             if (!tokenOk($_POST['token'])) die('Wrong token.'); // Go away !
 
             // Make sure old password is correct.
-            $oldhash = sha1($_POST['oldpassword'].$GLOBALS['login'].$GLOBALS['salt']);
-            if ($oldhash!=$GLOBALS['hash']) { echo '<script language="JavaScript">alert("The old password is not correct.");document.location=\'?do=changepasswd\';</script>'; exit; }
+            $oldhash = sha1($_POST['oldpassword'].$_SESSION['username'].$GLOBALS['salt']);
+            if ($oldhash != $GLOBALS['password'][$_SESSION['username']]) { echo '<script language="JavaScript">alert("The old password is not correct.");document.location=\'?do=changepasswd\';</script>'; exit; }
             // Save new password
-            $GLOBALS['salt'] = sha1(uniqid('',true).'_'.mt_rand()); // Salt renders rainbow-tables attacks useless.
-            $GLOBALS['hash'] = sha1($_POST['setpassword'].$GLOBALS['login'].$GLOBALS['salt']);
+            //$GLOBALS['salt'] = sha1(uniqid('',true).'_'.mt_rand()); // Salt renders rainbow-tables attacks useless.
+            $GLOBALS['password'][$_SESSION['username']] = sha1($_POST['setpassword'].$_SESSION['username'].$GLOBALS['salt']);
             writeConfig();
             echo '<script language="JavaScript">alert("Your password has been changed.");document.location=\'?do=tools\';</script>';
             exit;
@@ -1352,6 +1411,59 @@ function renderPage()
             $PAGE->renderPage('changepassword');
             exit;
         }
+    }
+
+    // -------- User wants to manage users.
+    if (isset($_SERVER["QUERY_STRING"]) && startswith($_SERVER["QUERY_STRING"],'do=users')) {
+        $PAGE = new pageBuilder;
+        foreach ($GLOBALS['login'] as $key => $username) {
+            if ($key === 0) $users[$key]['sysAdmin'] = TRUE;
+            else $users[$key]['sysAdmin'] = FALSE;
+            $users[$key]['username'] = $username;
+            $users[$key]['level']    = $GLOBALS['level'][$username];
+            $users[$key]['email']    = $GLOBALS['email'][$username];
+        }
+        $PAGE->assign('users', $users);
+        $PAGE->renderPage('manageusers');
+        exit;
+    }
+
+    // -------- Create / Editing user.
+    if (isset($_SERVER["QUERY_STRING"]) && startswith($_SERVER["QUERY_STRING"],'do=saveUser')) {
+        $saveUserMessage = 'user successfully updated !';
+        if (isset($_GET['deleteUser'])) {
+            if (is_array($GLOBALS['login'])) {
+                if (in_array($_GET['username'], $GLOBALS['login'])) {
+                    $sUkey = array_search($_GET['username'], $GLOBALS['login']);
+                    if ($sUkey !== 0) {
+                        unset($GLOBALS['login'][$sUkey], $GLOBALS['password'][$_GET['username']],
+                        $GLOBALS['level'][$_GET['username']], $GLOBALS['email'][$_GET['username']]);
+                        $GLOBALS['login'] = array_values($GLOBALS['login']);
+                        writeConfig();
+                        echo '<script language="JavaScript">alert("' . $_GET['username'] . ' was deleted.");document.location=\'?do=users\';</script>';
+                    }
+                }
+            }
+        exit;
+        }
+        if (is_array($GLOBALS['login'])) {
+            if (!in_array($_GET['username'], $GLOBALS['login'])) {
+                $newUserKey       = count($GLOBALS['login']);
+                $newUser          = array($newUserKey => $_GET['username']);
+                $GLOBALS['login'] = $GLOBALS['login'] + $newUser;
+                $saveUserMessage  = 'user successfully created !';
+            }
+            if (is_array($newUser) || isset($_GET['resetPassword'])) {
+                $newPassword                            = smallHash(sha1(uniqid('',true).'_'.mt_rand()));
+                $GLOBALS['password'][$_GET['username']] = sha1($newPassword . $_GET['username'] . $GLOBALS['salt']);
+                $saveUserMessage                       .= ' His new password is ' . $newPassword;
+            }
+            $GLOBALS['level'][$_GET['username']] = (int) $_GET['userlevel'];
+            $GLOBALS['email'][$_GET['username']] = $_GET['email'];
+        }
+        writeConfig();
+        echo '<script language="JavaScript">alert("' . $saveUserMessage . '");document.location=\'?do=users\';</script>';
+        exit;
     }
 
     // -------- User wants to change configuration
@@ -1452,11 +1564,19 @@ function renderPage()
         if (!tokenOk($_POST['token'])) die('Wrong token.'); // Go away !
         $tags = trim(preg_replace('/\s\s+/',' ', $_POST['lf_tags'])); // Remove multiple spaces.
         $linkdate=$_POST['lf_linkdate'];
+        // If user is not an admin and try to edit other link of him and keep author when updating link
+        if (isset($LINKSDB[$linkdate])) {
+            if ($_SESSION['level'] < 3 && $LINKSDB[$linkdate]['author'] !== $_SESSION['username']) die('You cannot edit link of other !');
+            $author = $LINKSDB[$linkdate]['author'];
+        }
+        else {
+            $author = $_SESSION['username'];
+        }
         $url = trim($_POST['lf_url']);
         if (!startsWith($url,'http:') && !startsWith($url,'https:') && !startsWith($url,'ftp:') && !startsWith($url,'magnet:') && !startsWith($url,'?'))
-            $url = 'http://'.$url;
-        $link = array('title'=>trim($_POST['lf_title']),'url'=>$url,'description'=>trim($_POST['lf_description']),'private'=>(isset($_POST['lf_private']) ? 1 : 0),
-                      'linkdate'=>$linkdate,'tags'=>str_replace(',',' ',$tags));
+            $url  = 'http://'.$url;
+            $link = array('title'=>trim($_POST['lf_title']),'url'=>$url,'description'=>trim($_POST['lf_description']),'private'=>$_POST['lf_private'],
+                      'author' => $author,'linkdate'=>$linkdate,'tags'=>str_replace(',',' ',$tags));
         if ($link['title']=='') $link['title']=$link['url']; // If title is empty, use the URL as title.
         $LINKSDB[$linkdate] = $link;
         $LINKSDB->savedb(); // save to disk
@@ -1489,6 +1609,7 @@ function renderPage()
         // - confirmation is handled by javascript
         // - we are protected from XSRF by the token.
         $linkdate=$_POST['lf_linkdate'];
+        if ($_SESSION['level'] < 3 && $LINKSDB[$linkdate]['author'] !== $_SESSION['username']) die('You cannot delete link of other !');
         unset($LINKSDB[$linkdate]);
         $LINKSDB->savedb(); // save to disk
 
@@ -1505,6 +1626,7 @@ function renderPage()
     {
         $link = $LINKSDB[$_GET['edit_link']];  // Read database
         if (!$link) { header('Location: ?'); exit; } // Link not found in database.
+        if ($_SESSION['level'] < 3 && $LINKSDB[$_GET['edit_link']]['author'] !== $_SESSION['username']) exit; // If user is not an admin and try to edit other link of him
         $PAGE = new pageBuilder;
         $PAGE->assign('linkcount',count($LINKSDB));
         $PAGE->assign('link',$link);
@@ -1532,7 +1654,7 @@ function renderPage()
             $link_is_new = true;  // This is a new link
             $linkdate = strval(date('Ymd_His'));
             $title = (empty($_GET['title']) ? '' : $_GET['title'] ); // Get title if it was provided in URL (by the bookmarklet).
-            $description=''; $tags=''; $private=0;
+            $description=''; $tags=''; $private=2; $author = $_SESSION['username'];
             if (($url!='') && parse_url($url,PHP_URL_SCHEME)=='') $url = 'http://'.$url;
             // If this is an HTTP link, we try go get the page to extact the title (otherwise we will to straight to the edit form.)
             if (empty($title) && parse_url($url,PHP_URL_SCHEME)=='http')
@@ -1543,7 +1665,7 @@ function renderPage()
 
             }
             if ($url=='') $url='?'.smallHash($linkdate); // In case of empty URL, this is just a text (with a link that point to itself)
-            $link = array('linkdate'=>$linkdate,'title'=>$title,'url'=>$url,'description'=>$description,'tags'=>$tags,'private'=>0);
+            $link = array('linkdate'=>$linkdate,'title'=>$title,'url'=>$url,'description'=>$description,'tags'=>$tags,'private'=>2, 'author' => $author);
         }
 
         $PAGE = new pageBuilder;
@@ -1784,7 +1906,9 @@ function buildLinkList($PAGE,$LINKSDB)
         $link['description']=nl2br(keepMultipleSpaces(text2clickable(htmlspecialchars($link['description']))));
         $title=$link['title'];
         $classLi =  $i%2!=0 ? '' : 'publicLinkHightLight';
-        $link['class'] = ($link['private']==0 ? $classLi : 'private');
+        if ($link['private']==="2") $classLi = 'private';
+        elseif ($link['private']==="1") $classLi = 'contributor';
+        $link['class'] = $classLi;
         $link['localdate']=linkdate2locale($link['linkdate']);
         $taglist = explode(' ',$link['tags']);
         uasort($taglist, 'strcasecmp');
@@ -1979,7 +2103,6 @@ function lazyThumbnail($url,$href=false)
     else
         $html.='<img class="lazyimage" src="#" data-original="'.htmlspecialchars($t['src']).'"';
 
-    $html.='<img class="lazyimage" src="#" data-original="'.htmlspecialchars($t['src']).'"';
     if (!empty($t['width']))  $html.=' width="'.htmlspecialchars($t['width']).'"';
     if (!empty($t['height'])) $html.=' height="'.htmlspecialchars($t['height']).'"';
     if (!empty($t['style']))  $html.=' style="'.htmlspecialchars($t['style']).'"';
@@ -1997,6 +2120,27 @@ function lazyThumbnail($url,$href=false)
     return $html;
 }
 
+// -----------------------------------------------------------------------------------------------
+// Create user
+function createUser($username, $password, $level = '', $email = '')
+{
+    $currentLogin    = array($username);
+    $currentPassword = array($username => sha1($password . $username . $GLOBALS['salt']));
+    $currentLevel    = array($username => $level);
+    $currentEmail    = array($username => $email);
+    if (is_array($GLOBALS['login'])) {
+        $GLOBALS['login']    = array_merge($GLOBALS['login'], $currentLogin);
+        $GLOBALS['password'] = array_merge($GLOBALS['password'], $currentPassword);
+        $GLOBALS['level']    = array_merge($GLOBALS['level'], $currentLevel);
+        $GLOBALS['email']    = array_merge($GLOBALS['email'] , $currentEmail);
+    }
+    else {
+        $GLOBALS['login']    = $currentLogin;
+        $GLOBALS['password'] = $currentPassword;
+        $GLOBALS['level']    = $currentLevel;
+        $GLOBALS['email']    = $currentEmail;
+    }
+}
 
 // -----------------------------------------------------------------------------------------------
 // Installation
@@ -2031,18 +2175,19 @@ function install()
     if (!empty($_POST['setlogin']) && !empty($_POST['setpassword']))
     {
         $tz = 'UTC';
-        if (!empty($_POST['continent']) && !empty($_POST['city']))
-            if (isTZvalid($_POST['continent'],$_POST['city']))
+        if (!empty($_POST['continent']) && !empty($_POST['city'])) {
+            if (isTZvalid($_POST['continent'],$_POST['city'])) {
                 $tz = $_POST['continent'].'/'.$_POST['city'];
-        $GLOBALS['timezone'] = $tz;
-        // Everything is ok, let's create config file.
-        $GLOBALS['login'] = $_POST['setlogin'];
-        $GLOBALS['salt'] = sha1(uniqid('',true).'_'.mt_rand()); // Salt renders rainbow-tables attacks useless.
-        $GLOBALS['hash'] = sha1($_POST['setpassword'].$GLOBALS['login'].$GLOBALS['salt']);
-        $GLOBALS['title'] = (empty($_POST['title']) ? 'Shared links on '.htmlspecialchars(indexUrl()) : $_POST['title'] );
-        writeConfig();
-        echo '<script language="JavaScript">alert("Shaarli is now configured. Please enter your login/password and start shaaring your links !");document.location=\'?do=login\';</script>';
-        exit;
+                $GLOBALS['timezone'] = $tz;
+                // Everything is ok, let's create config file.
+                $GLOBALS['salt'] = sha1(uniqid('',true).'_'.mt_rand()); // Salt renders rainbow-tables attacks useless.
+                $GLOBALS['title'] = $_POST['settitle'];
+                createUser($_POST['setlogin'], $_POST['setpassword'], $GLOBALS['level']['administrator'], $_POST['setemail']);
+                writeConfig();
+                echo '<script language="JavaScript">alert("Shaarli is now configured. Please enter your login/password and start shaaring your links !");document.location=\'?do=login\';</script>';
+                exit;
+            }
+        }
     }
 
     // Display config form:
@@ -2165,13 +2310,20 @@ function processWS()
 function writeConfig()
 {
     if (is_file($GLOBALS['config']['CONFIG_FILE']) && !isLoggedIn()) die('You are not authorized to alter config.'); // Only logged in user can alter config.
-    $config='<?php $GLOBALS[\'login\']='.var_export($GLOBALS['login'],true).'; $GLOBALS[\'hash\']='.var_export($GLOBALS['hash'],true).'; $GLOBALS[\'salt\']='.var_export($GLOBALS['salt'],true).'; ';
-    $config .='$GLOBALS[\'timezone\']='.var_export($GLOBALS['timezone'],true).'; date_default_timezone_set('.var_export($GLOBALS['timezone'],true).'); $GLOBALS[\'title\']='.var_export($GLOBALS['title'],true).';';
-    $config .= '$GLOBALS[\'redirector\']='.var_export($GLOBALS['redirector'],true).'; ';
-    $config .= '$GLOBALS[\'disablesessionprotection\']='.var_export($GLOBALS['disablesessionprotection'],true).'; ';
-    $config .= '$GLOBALS[\'disablejquery\']='.var_export($GLOBALS['disablejquery'],true).'; ';
-    $config .= '$GLOBALS[\'privateLinkByDefault\']='.var_export($GLOBALS['privateLinkByDefault'],true).'; ';
-    $config .= ' ?>';
+    $config  ='<?php' .PHP_EOL;
+    $config .= '$GLOBALS[\'login\'] = ' . var_export($GLOBALS['login'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'password\'] = ' . var_export($GLOBALS['password'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'level\'] = ' . var_export($GLOBALS['level'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'email\'] = ' . var_export($GLOBALS['email'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'salt\'] = ' . var_export($GLOBALS['salt'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'timezone\'] = ' . var_export($GLOBALS['timezone'],true) . ';' . PHP_EOL;
+    $config .= 'date_default_timezone_set(' . var_export($GLOBALS['timezone'],true) . ');' . PHP_EOL;
+    $config .= '$GLOBALS[\'title\'] = '.var_export($GLOBALS['title'],true).';' . PHP_EOL;
+    $config .= '$GLOBALS[\'redirector\'] = '.var_export($GLOBALS['redirector'],true).';' . PHP_EOL;
+    $config .= '$GLOBALS[\'disablesessionprotection\'] = ' . var_export($GLOBALS['disablesessionprotection'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'disablejquery\'] = ' . var_export($GLOBALS['disablejquery'],true) . ';' . PHP_EOL;
+    $config .= '$GLOBALS[\'privateLinkByDefault\'] = ' . var_export($GLOBALS['privateLinkByDefault'],true) . ';' . PHP_EOL;
+    $config .= '?>';
     if (!file_put_contents($GLOBALS['config']['CONFIG_FILE'],$config) || strcmp(file_get_contents($GLOBALS['config']['CONFIG_FILE']),$config)!=0)
     {
         echo '<script language="JavaScript">alert("Shaarli could not create the config file. Please make sure Shaarli has the right to write in the folder is it installed in.");document.location=\'?\';</script>';
