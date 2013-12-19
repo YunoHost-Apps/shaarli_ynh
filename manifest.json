@@ -1,0 +1,57 @@
+{
+  "name": "Shaarli",
+  "id": "shaarli",
+  "description": {
+    "en": "The personal, minimalist, super-fast, no-database delicious clone",
+    "fr": "Clone de delicious"
+  },
+  "developer": {
+    "name": "julien",
+    "email": "julien.malik@paraiso.me",
+    "url": "http://sebsauvage.net/wiki/doku.php?id=php:shaarli"
+  },
+  "multi_instance": "false",
+  "arguments": {
+    "install" : [
+    {
+      "name": "domain",
+      "ask": {
+        "en": "Choose a domain for Shaarli"
+      },
+      "example": "domain.org"
+    },
+    {
+      "name": "path",
+      "ask": {
+        "en": "Choose a path for Shaarli"
+      },
+      "example": "/shaarli",
+      "default": "/shaarli"
+    },
+    {
+      "name": "public",
+      "ask": {
+        "en": "Is it a public Shaarli site ?"
+      },
+      "choices": ["Yes", "No"],
+      "default": "Yes"
+    },
+    {
+      "name": "title",
+      "ask": {
+        "en": "Choose a title for Shaarli's page"
+      },
+      "example": "Shaarli",
+      "default": "Shaarli"
+    },
+    {
+      "name": "privatelinkbydefault",
+      "ask": {
+        "en": "Are new links private by default ?"
+      },
+      "choices": ["Yes", "No"],
+      "default": "Yes"
+    }
+    ]
+  }
+}

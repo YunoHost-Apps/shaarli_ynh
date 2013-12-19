@@ -1,0 +1,94 @@
+#!/bin/bash
+
+# Retrieve arguments
+domain=$1
+path=$2
+is_public=$3
+title=$4
+privatelinkbydefault=$5
+
+
+# Check domain/path availability
+sudo yunohost app checkurl $domain$path -a shaarli
+if [[ ! $? -eq 0 ]]; then
+  exit 1
+fi
+
+# Copy files to the right place
+app_home_path=/home/yunohost.app/shaarli
+final_path=/var/www/shaarli
+sudo mkdir -p $final_path
+sudo cp -r ../sources/* $final_path
+
+for subdir in data cache pagecache tmp
+do
+  sudo mkdir -p $app_home_path/$subdir
+  sudo chown -R www-data: $app_home_path/$subdir
+done
+
+salt=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d 'A-Za-z0-9' | sed -n 's/\(.\{24\}\).*/\1/p')
+
+user_count=0
+for user in $(sudo yunohost user list | python user_list.py)
+do
+    if [[ ! $user == yunohost.* ]];
+    then
+    
+        YNH_LOGINS=$(cat << EOF
+$YNH_LOGINS\\
+$user_count => $user,
+EOF
+)
+
+        YNH_PASSWORDS=$(cat << EOF
+$YNH_PASSWORDS\\
+$user => '',
+EOF
+)
+
+        YNH_LEVELS=$(cat << EOF
+$YNH_LEVELS\\
+$user => 2,
+EOF
+)
+
+        YNH_EMAILS=$(cat << EOF
+$YNH_EMAILS\\
+$user => ''
+EOF
+)
+
+        let user_count++
+    fi
+done
+
+sudo sed -i "s@YNH_LOGINS@$YNH_LOGINS@g" ../conf/config.php
+sudo sed -i "s@YNH_PASSWORDS@$YNH_PASSWORDS@g" ../conf/config.php
+sudo sed -i "s@YNH_LEVELS@$YNH_LEVELS@g" ../conf/config.php
+sudo sed -i "s@YNH_EMAILS@$YNH_EMAILS@g" ../conf/config.php
+sudo sed -i "s@YNH_SALT@$salt@g" ../conf/config.php
+sudo sed -i "s@YNH_TIMEZONE@$(cat /etc/timezone)@g" ../conf/config.php
+sudo sed -i "s@YNH_TITLE@$title@g" ../conf/config.php
+sudo sed -i "s@YNH_PRIVATE_LINK_BY_DEFAULT@$privatelinkbydefault@g" ../conf/config.php
+
+sudo cp ../conf/config.php $app_home_path/data
+
+sudo find $final_path -type f | xargs sudo chmod 644
+sudo find $final_path -type d | xargs sudo chmod 755
+sudo chown -R root: $final_path
+
+sudo find $app_home_path -type f | xargs sudo chmod 640
+sudo find $app_home_path -type d | xargs sudo chmod 750
+sudo chown -R www-data: $app_home_path
+
+# Modify Nginx configuration file and copy it to Nginx conf directory
+sudo sed -i "s@YNH_WWW_PATH@$path@g" ../conf/nginx.conf
+sudo sed -i "s@YNH_ALIAS@$final_path@g" ../conf/nginx.conf
+sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/shaarli.conf
+
+# Reload Nginx and regenerate SSOwat conf
+if [ $is_public = "No" ]; then
+  sudo yunohost app setting shaarli unprotected_uris -v "/index.php"
+fi
+sudo service nginx reload
+sudo yunohost app ssowatconf

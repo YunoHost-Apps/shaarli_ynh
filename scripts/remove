@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo rm -rf /var/www/shaarli
+sudo rm -f /etc/nginx/conf.d/$domain.d/shaarli.conf
+sudo rm -rf /home/yunohost.app/shaarli/data
