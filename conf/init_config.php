@@ -6,8 +6,12 @@ $GLOBALS['title'] = 'YNH_TITLE';
 $GLOBALS['redirector'] = '';
 $GLOBALS['disablesessionprotection'] = false;
 $GLOBALS['disablejquery'] = false;
-$GLOBALS['privateLinkByDefault'] = 'YNH_PRIVATE_LINK_BY_DEFAULT';
+$GLOBALS['privateLinkByDefault'] = YNH_PRIVATE_LINK_BY_DEFAULT;
 $GLOBALS['ynh_admin'] = 'YNH_ADMIN';
 
-require(realpath(dirname(__FILE__)) . '/config_user.php');
+$userconfigfile = realpath(dirname(__FILE__)) . '/config_user.php';
+if (is_file($userconfigfile))
+{
+  require($userconfigfile);
+}
 ?>

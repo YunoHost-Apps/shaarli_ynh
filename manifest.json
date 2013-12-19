@@ -51,6 +51,14 @@
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
+    },
+    {
+      "name": "admin",
+      "ask": {
+        "en": "Admin user"
+      },
+      "example": "test",
+      "default": "test"
     }
     ]
   }
