@@ -57,8 +57,7 @@
       "ask": {
         "en": "Admin user"
       },
-      "example": "test",
-      "default": "test"
+      "example": "test"
     }
     ]
   }
