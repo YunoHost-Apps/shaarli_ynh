@@ -16,7 +16,7 @@ if [[ ! $? -eq 0 ]]; then
 fi
 
 # Install dependencies
-sudo apt-get install php5-cli
+sudo apt-get install php5-cli -y -qq
 
 # Copy files to the right place
 app_home_path=/home/yunohost.app/shaarli
