@@ -8,6 +8,13 @@ title=$4
 privatelinkbydefault=$5
 admin=$6
 
+# Check that admin user is an existing account
+sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
+if [[ ! $? -eq 0 ]]; then
+echo "Error : the chosen admin user does not exist"
+    exit 1
+fi
+sudo yunohost app setting shaarli admin -v $admin
 
 # Check domain/path availability
 sudo yunohost app checkurl $domain$path -a shaarli
