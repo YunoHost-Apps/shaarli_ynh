@@ -52,7 +52,7 @@ sudo sed -i "s@YNH_ADMIN@$admin@g" ../conf/init_config.php
 
 sudo cp ../conf/options.php $app_home_path/data/options.php
 sudo cp ../conf/init_config.php $app_home_path/data/config.php
-sudo php ../conf/init_config_user.php $(sudo yunohost user list | python ../conf/user_list.py)
+sudo php ../conf/init_config_user.php $(sudo yunohost user list --json | python ../conf/user_list.py)
 
 sudo find $final_path -type f | xargs sudo chmod 644
 sudo find $final_path -type d | xargs sudo chmod 755
