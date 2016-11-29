@@ -1,14 +1,15 @@
 {
   "name": "Shaarli",
   "id": "shaarli",
+  "packaging_format": 1,
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
     "fr": "Clone de delicious, rapide, simple et sans base de données."
   },
   "maintainer": {
     "name": "Lapineige",
-    "url": "https://github.com/shaarli/Shaarli"
   },
+  "url": "https://github.com/shaarli/Shaarli"
   "multi_instance": "false",
   "arguments": {
     "install" : [
