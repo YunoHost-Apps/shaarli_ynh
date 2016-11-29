@@ -3,12 +3,11 @@
   "id": "shaarli",
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
-    "fr": "Clone de delicious"
+    "fr": "Clone de delicious, rapide, simple et sans base de données."
   },
-  "developer": {
-    "name": "julien",
-    "email": "julien.malik@paraiso.me",
-    "url": "http://sebsauvage.net/wiki/doku.php?id=php:shaarli"
+  "maintainer": {
+    "name": "Lapineige",
+    "url": "https://github.com/shaarli/Shaarli"
   },
   "multi_instance": "false",
   "arguments": {
@@ -16,14 +15,16 @@
     {
       "name": "domain",
       "ask": {
-        "en": "Choose a domain for Shaarli"
+        "en": "Choose a domain for your Shaarli"
+        "fr": "Choisissez un domaine pour votre Shaarli"
       },
       "example": "domain.org"
     },
     {
       "name": "path",
       "ask": {
-        "en": "Choose a path for Shaarli"
+        "en": "Choose a path for your Shaarli"
+        "fr": "Choisissez un chemin pour votre Shaarli"
       },
       "example": "/shaarli",
       "default": "/shaarli"
@@ -32,6 +33,7 @@
       "name": "public",
       "ask": {
         "en": "Is it a public Shaarli site ?"
+        "en": "Est-ce un site Shaarli public ?"
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
@@ -40,6 +42,7 @@
       "name": "title",
       "ask": {
         "en": "Choose a title for Shaarli's page"
+        "fr": "Choissez un titre pour la page Shaarli"
       },
       "example": "Shaarli",
       "default": "Shaarli"
@@ -48,6 +51,7 @@
       "name": "privatelinkbydefault",
       "ask": {
         "en": "Are new links private by default ?"
+        "fr": "Les nouveaux liens sont-ils privés par défaut ?"      
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
@@ -56,6 +60,7 @@
       "name": "admin",
       "ask": {
         "en": "Admin user"
+        "fr": "Administrateur"
       },
       "example": "test"
     }
