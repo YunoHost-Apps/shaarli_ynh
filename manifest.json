@@ -9,7 +9,7 @@
   "maintainer": {
     "name": "Lapineige",
   },
-  "url": "https://github.com/shaarli/Shaarli"
+  "url": "https://github.com/shaarli/Shaarli",
   "multi_instance": "false",
   "arguments": {
     "install" : [
