@@ -15,7 +15,7 @@
     {
       "name": "domain",
       "ask": {
-        "en": "Choose a domain for your Shaarli"
+        "en": "Choose a domain for your Shaarli",
         "fr": "Choisissez un domaine pour votre Shaarli"
       },
       "example": "domain.org"
@@ -23,7 +23,7 @@
     {
       "name": "path",
       "ask": {
-        "en": "Choose a path for your Shaarli"
+        "en": "Choose a path for your Shaarli",
         "fr": "Choisissez un chemin pour votre Shaarli"
       },
       "example": "/shaarli",
@@ -32,8 +32,8 @@
     {
       "name": "public",
       "ask": {
-        "en": "Is it a public Shaarli site ?"
-        "en": "Est-ce un site Shaarli public ?"
+        "en": "Is it a public Shaarli site ?",
+        "fr": "Est-ce un site Shaarli public ?"
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
@@ -41,7 +41,7 @@
     {
       "name": "title",
       "ask": {
-        "en": "Choose a title for Shaarli's page"
+        "en": "Choose a title for Shaarli's page",
         "fr": "Choissez un titre pour la page Shaarli"
       },
       "example": "Shaarli",
@@ -50,7 +50,7 @@
     {
       "name": "privatelinkbydefault",
       "ask": {
-        "en": "Are new links private by default ?"
+        "en": "Are new links private by default ?",
         "fr": "Les nouveaux liens sont-ils privés par défaut ?"      
       },
       "choices": ["Yes", "No"],
@@ -59,7 +59,7 @@
     {
       "name": "admin",
       "ask": {
-        "en": "Admin user"
+        "en": "Admin user",
         "fr": "Administrateur"
       },
       "example": "test"
