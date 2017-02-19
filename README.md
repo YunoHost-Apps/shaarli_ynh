@@ -22,3 +22,7 @@ Help for dev/testing hightly appreciated :)
     * Configure Shaarli during installation
     * Add backup/restore scripts
     * Test more the package
+
+## Changelog
+
+For Shaarli changelog, see: https://github.com/shaarli/Shaarli/blob/master/CHANGELOG.md
