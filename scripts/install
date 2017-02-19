@@ -8,18 +8,21 @@ title=$4
 privatelinkbydefault=$5
 admin=$6
 
+# Load common variables and helpers
+source ./_common.sh
+
 # Check that admin user is an existing account
 sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
 if [[ ! $? -eq 0 ]]; then
 echo "Error : the chosen admin user does not exist"
-    exit 1
+exit 1
 fi
 sudo yunohost app setting shaarli admin -v $admin
 
 # Check domain/path availability
 sudo yunohost app checkurl $domain$path -a shaarli
 if [[ ! $? -eq 0 ]]; then
-  exit 1
+exit 1
 fi
 
 # Install dependencies
@@ -28,20 +31,23 @@ sudo apt-get install php5-cli -y -qq
 # Copy files to the right place
 app_home_path=/home/yunohost.app/shaarli
 final_path=/var/www/shaarli
-sudo mkdir -p $final_path
-sudo cp -r ../sources/* $final_path
 
-for subdir in data cache pagecache tmp
-do
-  sudo mkdir -p $app_home_path/$subdir
-  sudo chown -R www-data: $app_home_path/$subdir
-done
+sudo mkdir -p $final_path
+# Download and extract in /var/www
+extract_shaarli
+
+sudo mkdir -p $app_home_path/data
+sudo mkdir -p $app_home_path/cache
+sudo mkdir -p $app_home_path/pagecache
+sudo mkdir -p $app_home_path/tmp
+sudo mkdir -p $app_home_path/conf
+sudo chown -R www-data: $app_home_path
 
 salt=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d 'A-Za-z0-9' | sed -n 's/\(.\{24\}\).*/\1/p')
 if [ $privatelinkbydefault = "No" ]; then
-  privatelinkbydefault_php=false
+privatelinkbydefault_php=false
 else
-  privatelinkbydefault_php=true
+privatelinkbydefault_php=true
 fi
 
 sudo sed -i "s@YNH_SALT@$salt@g" ../conf/init_config.php
@@ -56,7 +62,7 @@ sudo php ../conf/init_config_user.php $(sudo yunohost user list --json | python 
 
 sudo find $final_path -type f | xargs sudo chmod 644
 sudo find $final_path -type d | xargs sudo chmod 755
-sudo chown -R root: $final_path
+#sudo chown -R root: $final_path
 
 sudo find $app_home_path -type f | xargs sudo chmod 600
 sudo find $app_home_path -type d | xargs sudo chmod 700
@@ -69,7 +75,7 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/shaarli.conf
 
 # Reload Nginx and regenerate SSOwat conf
 if [ $is_public = "Yes" ]; then
-  sudo yunohost app setting shaarli unprotected_uris -v "/"
+sudo yunohost app setting shaarli unprotected_uris -v "/"
 fi
 sudo service nginx reload
 sudo yunohost app ssowatconf
