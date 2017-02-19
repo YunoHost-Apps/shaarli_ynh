@@ -10,6 +10,7 @@
     "name": "Lapineige",
   },
   "url": "https://github.com/shaarli/Shaarli",
+  "version": "0.8.3",
   "multi_instance": "false",
   "arguments": {
     "install" : [
@@ -52,7 +53,7 @@
       "name": "privatelinkbydefault",
       "ask": {
         "en": "Are new links private by default ?",
-        "fr": "Les nouveaux liens sont-ils privés par défaut ?"      
+        "fr": "Les nouveaux liens sont-ils privés par défaut ?"
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
