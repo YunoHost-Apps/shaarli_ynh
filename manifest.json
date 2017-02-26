@@ -2,6 +2,9 @@
   "name": "Shaarli",
   "id": "shaarli",
   "packaging_format": 1,
+  "requirements": {
+    "yunohost": ">> 2.3.15"
+  },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
     "fr": "Clone de delicious, rapide, simple et sans base de données."
@@ -11,7 +14,7 @@
   },
   "url": "https://github.com/shaarli/Shaarli",
   "version": "0.8.3",
-  "multi_instance": "false",
+  "multi_instance": "true",
   "arguments": {
     "install" : [
     {
@@ -34,7 +37,7 @@
       "default": "/shaarli"
     },
     {
-      "name": "public",
+      "name": "is_public",
       "ask": {
         "en": "Is it a public Shaarli site ?",
         "fr": "Est-ce un site Shaarli public ?"
@@ -68,6 +71,14 @@
         "fr": "Administrateur"
       },
       "example": "test"
+    },
+    {
+      "name": "password",
+      "type": "password",
+      "ask": {
+        "en": "Define password for Shaarli user",
+        "fr": "Définissez le mot de passe de l'utilisateur Shaarli"
+      }
     }
     ]
   }
