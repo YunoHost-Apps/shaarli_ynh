@@ -16,6 +16,7 @@
     "install" : [
     {
       "name": "domain",
+      "type": "domain",
       "ask": {
         "en": "Choose a domain for your Shaarli",
         "fr": "Choisissez un domaine pour votre Shaarli"
@@ -24,6 +25,7 @@
     },
     {
       "name": "path",
+      "type": "path",
       "ask": {
         "en": "Choose a path for your Shaarli",
         "fr": "Choisissez un chemin pour votre Shaarli"
@@ -60,6 +62,7 @@
     },
     {
       "name": "admin",
+      "type": "user",
       "ask": {
         "en": "Admin user",
         "fr": "Administrateur"
