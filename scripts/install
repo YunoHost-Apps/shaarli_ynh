@@ -24,16 +24,6 @@ title=$YNH_APP_ARG_TITLE
 privatelinkbydefault=$YNH_APP_ARG_PRIVATELINKBYDEFAULT
 password=$YNH_APP_ARG_PASSWORD
 
-# <TODO: cleaning>
-## Retrieve arguments
-#domain=$1
-#path=$2
-#is_public=$3
-#title=$4
-#privatelinkbydefault=$5
-#admin=$6
-# </TODO>
-
 # Load common variables and helpers
 source ./_common.sh
 
@@ -62,15 +52,6 @@ sudo mkdir -p $final_path
 # Download and extract in /var/www
 extract_shaarli
 
-# <TODO: cleaning>
-#sudo mkdir -p $app_home_path/data
-#sudo mkdir -p $app_home_path/cache
-#sudo mkdir -p $app_home_path/pagecache
-#sudo mkdir -p $app_home_path/tmp
-#sudo mkdir -p $app_home_path/conf
-#sudo chown -R www-data: $app_home_path
-# </TODO>
-
 # generate the salt
 salt=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d 'A-Za-z0-9' | sed -n 's/\(.\{24\}\).*/\1/p')
 
@@ -92,18 +73,6 @@ sudo sed -i "s@YNH_TIMEZONE@$(cat /etc/timezone)@g" ../conf/config.json.php
 sudo sed -i "s@YNH_TITLE@$title@g" ../conf/config.json.php
 sudo sed -i "s@YNH_PRIVATE_LINK_BY_DEFAULT@$privatelinkbydefault_php@g" ../conf/config.json.php
 
-# <TODO: cleaning>
-#sudo sed -i "s@YNH_SALT@$salt@g" ../conf/init_config.php
-#sudo sed -i "s@YNH_TIMEZONE@$(cat /etc/timezone)@g" ../conf/init_config.php
-#sudo sed -i "s@YNH_TITLE@$title@g" ../conf/init_config.php
-#sudo sed -i "s@YNH_PRIVATE_LINK_BY_DEFAULT@$privatelinkbydefault_php@g" ../conf/init_config.php
-#sudo sed -i "s@YNH_ADMIN@$admin@g" ../conf/init_config.php
-#
-#sudo cp ../conf/options.php $app_home_path/data/options.php
-#sudo cp ../conf/init_config.php $app_home_path/data/config.php
-#sudo php ../conf/init_config_user.php $(sudo yunohost user list --json | python ../conf/user_list.py)
-# </TODO>
-
 # Populate the data directory of the shaarli instance
 sudo cp ../conf/config.json.php $final_path/data
 sudo cp ../conf/datastore.php $final_path/data
@@ -115,12 +84,6 @@ sudo cp ../conf/updates.txt $final_path/data
 sudo find $final_path -type f | xargs sudo chmod 644
 sudo find $final_path -type d | xargs sudo chmod 755
 #sudo chown -R root: $final_path
-
-# <TODO: cleaning>
-#sudo find $app_home_path -type f | xargs sudo chmod 600
-#sudo find $app_home_path -type d | xargs sudo chmod 700
-#sudo chown -R www-data: $app_home_path
-# </TODO>
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sudo sed -i "s@YNH_WWW_PATH@$path@g" ../conf/nginx.conf
