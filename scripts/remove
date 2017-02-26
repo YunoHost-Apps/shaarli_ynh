@@ -13,9 +13,8 @@
 app=$YNH_APP_INSTANCE_NAME
 
 domain=$(sudo yunohost app setting $app domain)
-www_path=$(sudo yunohost app setting $app path | sed -e 's@^/@@' -e 's@/$@@')
 
-sudo rm -rf /var/www/$www_path
+sudo rm -rf /var/www/$app
 sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
 
 sudo service nginx reload
