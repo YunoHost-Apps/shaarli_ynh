@@ -81,9 +81,18 @@ sudo cp ../conf/lastupdatecheck.txt $final_path/data
 sudo cp ../conf/log.txt $final_path/data
 sudo cp ../conf/updates.txt $final_path/data
 
+# set proper permissions
 sudo find $final_path -type f | xargs sudo chmod 644
 sudo find $final_path -type d | xargs sudo chmod 755
-#sudo chown -R root: $final_path
+sudo chown -R root: $final_path
+
+#set proper ownership of the files in /data
+sudo chown www-data:www-data $final_path/data/config.json.php 
+sudo chown www-data:www-data $final_path/data/datastore.php 
+sudo chown www-data:www-data $final_path/data/ipbans.php 
+sudo chown www-data:www-data $final_path/data/lastupdatecheck.txt 
+sudo chown www-data:www-data $final_path/data/log.txt 
+sudo chown www-data:www-data $final_path/data/updates.txt 
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 sudo sed -i "s@YNH_WWW_PATH@$path@g" ../conf/nginx.conf
