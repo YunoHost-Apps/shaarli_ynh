@@ -84,7 +84,7 @@ sudo cp ../conf/updates.txt $final_path/data
 # set proper permissions
 sudo find $final_path -type f | xargs sudo chmod 644
 sudo find $final_path -type d | xargs sudo chmod 755
-sudo chown -R root: $final_path
+#sudo chown -R root: $final_path
 
 #set proper ownership of the files in /data
 sudo chown www-data:www-data $final_path/data/config.json.php 
