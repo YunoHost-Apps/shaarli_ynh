@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 
 # Retrieve old app settings
 domain=$(ynh_app_setting_get "$app" domain)
-path_url=$(ynh_app_setting_get "$app" path_url)
+path_url=$(ynh_app_setting_get "$app" path)
 
 # Check domain/path availability
 sudo yunohost app checkurl "${domain}${path_url}" -a "$app" \
