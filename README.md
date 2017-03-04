@@ -14,13 +14,13 @@ Help for dev/testing hightly appreciated :)
 ## Current features
 
     * Install / remove scripts
+    * Backup/restore scripts
     * Adding / removing a link
     * Upgrade *not tested*
 
 ## TODO
 
     * Configure Shaarli during installation
-    * Add backup/restore scripts
     * Test more the package
 
 ## Changelog
