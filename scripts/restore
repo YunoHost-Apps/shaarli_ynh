@@ -26,7 +26,7 @@ sudo cp -a ./sources "$src_path"
 
 # Restore permissions to app files
 # you may need to make some file and/or directory writeable by www-data (nginx user)
-sudo chown -R root: "$src_path"
+sudo chown -R www-data:www-data "$src_path"
 
 # Restore NGINX configuration
 sudo cp -a ./nginx.conf "/etc/nginx/conf.d/${domain}.d/${app}.conf"
