@@ -34,7 +34,7 @@
         "fr": "Est-ce un site Shaarli public ?"
       },
       "choices": ["Yes", "No"],
-      "default": "Yes"
+      "default": "No"
     },
     {
       "name": "admin",
@@ -88,7 +88,7 @@
         "fr": "Cette instance est elle privée ?"
       },
       "choices": ["Yes", "No"],
-      "default": "No"
+      "default": "Yes"
     }
     ]
   }
