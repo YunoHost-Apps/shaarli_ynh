@@ -40,8 +40,8 @@
       "name": "admin",
       "type": "user",
       "ask": {
-        "en": "Admin user",
-        "fr": "Administrateur"
+        "en": "Owner of the Shaarli instance",
+        "fr": "Proprietaire de l'instance Shaarli"
       },
       "example": "test"
     },
@@ -80,6 +80,15 @@
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
+    },
+    {
+      "name": "privateinstance",
+      "ask": {
+        "en": "Is the instance private?",
+        "fr": "Cette instance est elle privée ?"
+      },
+      "choices": ["Yes", "No"],
+      "default": "No"
     }
     ]
   }

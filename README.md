@@ -17,10 +17,17 @@ Help for dev/testing hightly appreciated :)
     * Backup/restore scripts
     * Adding / removing a link
     * Upgrade *not tested*
+    * Configure Shaarli during installation
+
+## Installation information
+
+When doing the installation you will be prompted if you want to have a public site, meaning that you don't have to be a user of this Yunohost instance to access the site.
+
+You will also be asked if you want to   have a private instance, meaning that the authentication will be deactivated and the application will be only available to the owner designed during install.
 
 ## TODO
-
-    * Configure Shaarli during installation
+    
+    * Integrate the ssowat authentication (currently the authentication is done by Shaarli)
     * Test more the package
 
 ## Changelog

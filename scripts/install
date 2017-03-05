@@ -23,15 +23,22 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 title=$YNH_APP_ARG_TITLE
 privatelinkbydefault=$YNH_APP_ARG_PRIVATELINKBYDEFAULT
 password=$YNH_APP_ARG_PASSWORD
+privateinstance=$YNH_APP_ARG_PRIVATEINSTANCE
 
 # Load common variables and helpers
 source ./_common.sh
 
+# Check that the options are compatible
+if [ $is_public = "Yes" ]; then
+  if [ $privateinstance = "Yes" ] ; then
+    ynh_die "Incompatible options: the instance cannot be both public and private" 1
+  fi
+fi
+
 # Check that admin user is an existing account
 sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
 if [[ ! $? -eq 0 ]]; then
-echo "Error : the chosen admin user does not exist"
-exit 1
+ynh_die "Error : the chosen user does not exist" 1
 fi
 sudo yunohost app setting $app admin -v $admin
 
@@ -72,6 +79,10 @@ sudo sed -i "s@YNH_HASH@$password_hash@g" ../conf/config.json.php
 sudo sed -i "s@YNH_TIMEZONE@$(cat /etc/timezone)@g" ../conf/config.json.php
 sudo sed -i "s@YNH_TITLE@$title@g" ../conf/config.json.php
 sudo sed -i "s@YNH_PRIVATE_LINK_BY_DEFAULT@$privatelinkbydefault_php@g" ../conf/config.json.php
+# turn off authentication on the instance
+if [ $privateinstance = "Yes" ] ; then
+  sudo sed -i "/open_shaarli/s/false/true/" ../conf/config.json.php 
+fi
 
 # Populate the data directory of the shaarli instance
 sudo cp ../conf/config.json.php $final_path/data
@@ -102,6 +113,9 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 # Reload Nginx and regenerate SSOwat conf
 if [ $is_public = "Yes" ]; then
 sudo yunohost app setting $app unprotected_uris -v "/"
+elif [ $privateinstance = "Yes" ] ; then
+# Configure SSOWat to prevent access for other users
+sudo yunohost app setting $app allowed_users -v "$admin"
 fi
 sudo service nginx reload
 sudo yunohost app ssowatconf
