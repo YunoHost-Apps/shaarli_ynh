@@ -38,7 +38,7 @@
         "fr": "Est-ce un site Shaarli public ?"
       },
       "choices": ["Yes", "No"],
-      "default": "Yes"
+      "default": "No"
     },
     {
       "name": "title",
