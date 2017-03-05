@@ -41,7 +41,7 @@
       "type": "user",
       "ask": {
         "en": "Owner of the Shaarli instance",
-        "fr": "Proprietaire de l'instance Shaarli"
+        "fr": "Propriétaire de l'instance Shaarli"
       },
       "example": "test"
     },
