@@ -2,6 +2,9 @@
   "name": "Shaarli",
   "id": "shaarli",
   "packaging_format": 1,
+  "requirements": {
+    "yunohost": ">> 2.3.15"
+  },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
     "fr": "Clone de delicious, rapide, simple et sans base de données."
@@ -10,12 +13,14 @@
     "name": "Lapineige"
   },
   "url": "https://github.com/shaarli/Shaarli",
+  "license": "free",
   "version": "0.8.3",
-  "multi_instance": "false",
+  "multi_instance": "true",
   "arguments": {
     "install" : [
     {
       "name": "domain",
+      "type": "domain",
       "ask": {
         "en": "Choose a domain for your Shaarli",
         "fr": "Choisissez un domaine pour votre Shaarli"
@@ -24,6 +29,7 @@
     },
     {
       "name": "path",
+      "type": "path",
       "ask": {
         "en": "Choose a path for your Shaarli",
         "fr": "Choisissez un chemin pour votre Shaarli"
@@ -32,22 +38,13 @@
       "default": "/shaarli"
     },
     {
-      "name": "public",
+      "name": "is_public",
       "ask": {
         "en": "Is it a public Shaarli site ?",
         "fr": "Est-ce un site Shaarli public ?"
       },
       "choices": ["Yes", "No"],
       "default": "No"
-    },
-    {
-      "name": "title",
-      "ask": {
-        "en": "Choose a title for Shaarli's page",
-        "fr": "Choissez un titre pour la page Shaarli"
-      },
-      "example": "Shaarli",
-      "default": "Shaarli"
     },
     {
       "name": "privatelinkbydefault",
@@ -59,12 +56,39 @@
       "default": "Yes"
     },
     {
-      "name": "admin",
+      "name": "privateinstance",
       "ask": {
-        "en": "Admin user",
-        "fr": "Administrateur"
+        "en": "Is this instance private?",
+        "fr": "Cette instance est-elle privée ?"
+      },
+      "choices": ["Yes", "No"],
+      "default": "Yes"
+    },
+    {
+      "name": "admin",
+      "type": "user",
+      "ask": {
+        "en": "Owner of the Shaarli instance",
+        "fr": "Propriétaire de l'instance Shaarli"
       },
       "example": "test"
+    },
+    {
+      "name": "password",
+      "type": "password",
+      "ask": {
+        "en": "Define password for Shaarli user",
+        "fr": "Définissez le mot de passe de l'utilisateur Shaarli"
+      }
+    },
+    {
+      "name": "title",
+      "ask": {
+        "en": "Choose a title for Shaarli's page",
+        "fr": "Choissez un titre pour la page Shaarli"
+      },
+      "example": "Shaarli",
+      "default": "Shaarli"
     }
     ]
   }
