@@ -28,6 +28,14 @@ privateinstance=$YNH_APP_ARG_PRIVATEINSTANCE
 # Load common variables and helpers
 source ./_common.sh
 
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THIS ARGS
+#=================================================
+
+path_url=$(ynh_normalize_url_path $path_url)	# Vérifie et corrige la syntaxe du path.
+CHECK_DOMAINPATH	# Vérifie la disponibilité du path et du domaine.
+CHECK_FINALPATH # Vérifie que le dossier de destination n'est pas déjà utilisé.
+
 # Check that the options are compatible
 if [ $is_public = "Yes" ]; then
   if [ $privateinstance = "Yes" ] ; then
