@@ -28,8 +28,8 @@
       "example": "domain.org"
     },
     {
-      "name": "path_url",
-      "type": "path_url",
+      "name": "path",
+      "type": "path",
       "ask": {
         "en": "Choose a path for your Shaarli",
         "fr": "Choisissez un chemin pour votre Shaarli"
