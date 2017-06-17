@@ -5,10 +5,10 @@
 		path="/path"	(PATH)
 		admin="john"	(USER)
     		privatelinkbydefault="Yes"
-    		privateinstance="Yes"
+    		privateinstance="No"
     		password="password"
 		title="shaarli"
-		is_public="No"	(PUBLIC|public=Yes|private=No)
+		is_public="Yes"	(PUBLIC|public=Yes|private=No)
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=1
