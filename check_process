@@ -1,13 +1,11 @@
-;; Nom du test
+;; Test complet
 	auto_remove=1
 	; Manifest
 		domain="domain.tld"	(DOMAIN)
-		admin="john"   (USER)
 		path="/path"	(PATH)
-		passwd="adminpassword"
 	; Checks
 		pkg_linter=1
-		setup_sub_dir=0
+		setup_sub_dir=1
 		setup_root=1
 		setup_nourl=0
 		setup_private=0
@@ -15,9 +13,9 @@
 		upgrade=1
 		backup_restore=1
 		multi_instance=0
-		wrong_user=0
-		wrong_path=0
-		incorrect_path=0
+		wrong_user=1
+		wrong_path=1
+		incorrect_path=1
 		corrupt_source=0
 		fail_download_source=0
 		port_already_use=0
@@ -26,9 +24,8 @@
 	Level 1=auto
 	Level 2=auto
 	Level 3=auto
-	Level 4=na  
-	Level 5=1
-# level 5: le test ne semble pas tout à fait savoir ce qu'est vraiment un "exit".
+	Level 4=na
+	Level 5=auto
 	Level 6=auto
 	Level 7=auto
 	Level 8=0
