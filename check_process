@@ -4,8 +4,10 @@
 		domain="domain.tld"	(DOMAIN)
 		path="/path"	(PATH)
 		admin="john"	(USER)
-    privatelinkbydefault="Yes"
-    privateinstance="Yes"
+    		privatelinkbydefault="Yes"
+    		privateinstance="Yes"
+    		password="password"
+		title="shaarli"
 		is_public="No"	(PUBLIC|public=Yes|private=No)
 	; Checks
 		pkg_linter=1
