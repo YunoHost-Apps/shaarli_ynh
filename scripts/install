@@ -33,7 +33,7 @@ source ./_common.sh
 # CHECK IF THE APP CAN BE INSTALLED WITH THIS ARGS
 #=================================================
 
-path_url=$(ynh_normalize_url_path $path)	# Vérifie et corrige la syntaxe du path.
+path=$(ynh_normalize_url_path $path)	# Vérifie et corrige la syntaxe du path.
 
 
 # Check that the options are compatible
