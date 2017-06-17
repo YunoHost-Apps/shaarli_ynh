@@ -28,8 +28,11 @@ You will also be asked if you want to   have a private instance, meaning that th
 ## TODO
     
     * Integrate the ssowat authentication (currently the authentication is done by Shaarli)
-    * Test more the package
 
 ## Changelog
 
 For Shaarli changelog, see: https://github.com/shaarli/Shaarli/blob/master/CHANGELOG.md
+
+## Report a bug
+
+https://github.com/YunoHost-Apps/shaarli_ynh/issues
