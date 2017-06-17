@@ -19,6 +19,19 @@ SHAARLI_SOURCE_SHA256="dbf0fd3fbe679ebd642ddef5f5a90244e07beda28d1aedd35ef04f9c7
 # Source app helpers
 . /usr/share/yunohost/helpers
 
+# Add path
+ynh_normalize_url_path () {
+	path_url=$1
+	test -n "$path_url" || ynh_die "ynh_normalize_url_path expect a URL path as first argument and received nothing."
+	if [ "${path_url:0:1}" != "/" ]; then    # If the first character is not a /
+		path_url="/$path_url"    # Add / at begin of path variable
+	fi
+	if [ "${path_url:${#path_url}-1}" == "/" ] && [ ${#path_url} -gt 1 ]; then    # If the last character is a / and that not the only character.
+		path_url="${path_url:0:${#path_url}-1}"	# Delete the last character
+	fi
+	echo $path_url
+}
+
 # Download and extract Shaarli sources to the given directory
 # usage: extract_shaarli DESTDIR [AS_USER]
 extract_shaarli() {
