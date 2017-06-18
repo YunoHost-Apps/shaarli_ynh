@@ -10,7 +10,9 @@
     "fr": "Clone de delicious, rapide, simple et sans base de données."
   },
   "maintainer": {
-    "name": "Lapineige et Rafi59"
+          "name": "Lapineige et rafi59",
+          "email": "",
+          "url": ""
   },
   "url": "https://github.com/shaarli/Shaarli",
   "license": "free",
