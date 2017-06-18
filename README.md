@@ -30,6 +30,7 @@ You will also be asked if you want to   have a private instance, meaning that th
     * Integrate the ssowat authentication (currently the authentication is done by Shaarli)
     * Add upgrade script
     * Root install
+    * Refactoring of the code
 
 ## Changelog
 
