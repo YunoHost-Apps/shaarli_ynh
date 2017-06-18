@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u
+
 # This is a multi-instance app, meaning it can be installed several times independently
 # The id of the app as stated in the manifest is available as $YNH_APP_ID
 # The instance number is available as $YNH_APP_INSTANCE_NUMBER (equals "1", "2", ...)
