@@ -30,6 +30,7 @@ You will also be asked if you want to   have a private instance, meaning that th
     * Integrate the ssowat authentication (currently the authentication is done by Shaarli)
     * Add upgrade script
     * Refactoring of the code
+    * Add change_url
 
 ## Changelog
 
