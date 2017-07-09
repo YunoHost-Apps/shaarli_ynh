@@ -6,6 +6,8 @@ It is based on the community version of Shaarli (from @sebsauvage original softw
 
 Current version: **0.9.0**
 
+[![Install Sharrli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=shaarli)
+
 **Warning**: Work In Progress - **not ready for daily use**. (see https://github.com/YunoHost-Apps/shaarli_ynh/tree/v0.0.41beta if you need a stable version).
 Related topic on Yunohost's forum: https://forum.yunohost.org/t/fr-en-shaarli-app-lets-remove-the-dust/2200/
 
