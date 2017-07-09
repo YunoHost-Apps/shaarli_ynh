@@ -5,9 +5,10 @@ This app intends to provide to Yunohost's users Shaarli (https://github.com/shaa
 It is based on the community version of Shaarli (from @sebsauvage original software).
 
 Current version: **0.9.0**
+
 Maintainer: @Lapineige
 
-[![Install Sharrli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=shaarli)
+[![Install Shaarli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=shaarli)
 
 **Work In Progress** - the packaging is usable and  almost complete, but need more tests.
 Please backup your data (with export + yunohost backup) before updating the app.
