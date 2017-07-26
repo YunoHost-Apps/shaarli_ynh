@@ -1,4 +1,4 @@
-;; Test complet sans multisite
+;; Test complet
 	auto_remove=1
 	; Manifest
 		domain="domain.tld"	(DOMAIN)
@@ -16,6 +16,7 @@
 		setup_nourl=0
 		setup_private=1
 		setup_public=1
+		change_url=1
 		upgrade=1
 		backup_restore=0
 		multi_instance=1
