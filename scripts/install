@@ -124,12 +124,22 @@ cp ../conf/updates.txt $final_path/data
 # MODIFY A CONFIG FILE
 #=================================================
 
-ynh_replace_string "@YNH_SALT@" "$salt" "$final_path/config.json.php"
-ynh_replace_string "@YNH_ADMIN@" "$admin" "$final_path/config.json.php"
-ynh_replace_string "@YNH_HASH@" "$password_hash" "$final_path/config.json.php"
-ynh_replace_string "@YNH_TIMEZONE@" "$(cat /etc/timezone)" "$final_path/config.json.php"
-ynh_replace_string "@YNH_TITLE@" "$title" "$final_path/config.json.php"
-ynh_replace_string "@YNH_PRIVATE_LINK_BY_DEFAULT@" "$privatelinkbydefault_php" "$final_path/config.json.php"
+ynh_replace_string "@YNH_SALT@" "$salt" "../conf/config.json.php"
+ynh_replace_string "@YNH_ADMIN@" "$admin" "../conf/config.json.php"
+ynh_replace_string "@YNH_HASH@" "$password_hash" "../conf/config.json.php"
+ynh_replace_string "@YNH_TIMEZONE@" "$(cat /etc/timezone)" "../conf/config.json.php"
+ynh_replace_string "@YNH_TITLE@" "$title" "../conf/config.json.php"
+ynh_replace_string "@YNH_PRIVATE_LINK_BY_DEFAULT@" "$privatelinkbydefault_php" "../conf/config.json.php"
+
+#=================================================
+# SHAARLI CONFIG
+#=================================================
+cp ../conf/config.json.php $final_path/data
+cp ../conf/datastore.php $final_path/data
+cp ../conf/ipbans.php $final_path/data
+cp ../conf/lastupdatecheck.txt $final_path/data
+cp ../conf/log.txt $final_path/data
+cp ../conf/updates.txt $final_path/data
 
 #=================================================
 # STORE THE CHECKSUM OF THE CONFIG FILE
