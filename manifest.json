@@ -3,7 +3,7 @@
   "id": "shaarli",
   "packaging_format": 1,
   "requirements": {
-    "yunohost": ">> 2.3.15"
+    "yunohost": ">= 2.7.2"
   },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
