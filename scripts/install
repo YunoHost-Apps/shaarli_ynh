@@ -65,8 +65,10 @@ ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path_url
 ynh_app_setting_set $app admin $admin
 ynh_app_setting_set $app is_public $is_public
-ynh_app_setting_set $app language $language
-
+ynh_app_setting_set $app title $title
+ynh_app_setting_set $app privatelinkbydefault $privatelinkbydefault
+ynh_app_setting_set $app password $password
+ynh_app_setting_set $app privateinstance $privateinstance
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
@@ -76,15 +78,6 @@ ynh_app_setting_set $app language $language
 
 ynh_install_app_dependencies php5-cli
 
-#=================================================
-# CREATE A MYSQL DATABASE
-#=================================================
-# If your app uses a MySQL database, you can use these lines to bootstrap
-# a database, an associated user and save the password in app settings
-
-db_name=$(ynh_sanitize_dbid $app)
-ynh_app_setting_set $app db_name $db_name
-ynh_mysql_setup_db $db_name $db_name
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -107,13 +100,6 @@ ynh_add_nginx_config
 
 # Create a system user
 ynh_system_user_create $app
-
-#=================================================
-# PHP-FPM CONFIGURATION
-#=================================================
-
-# Create a dedicated php-fpm config
-ynh_add_fpm_config
 
 #=================================================
 # SPECIFIC SETUP
