@@ -1,9 +1,10 @@
 Shaarli app for Yunohost
 ===========
 [![Integration level](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/jenkins/job/shaarli%20%28Community%29/lastBuild/consoleFull)  
-This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
+
 [![Install Shaarli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=shaarli)
 
+This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
 
 It is based on the community version of Shaarli (from @sebsauvage original software).
 
