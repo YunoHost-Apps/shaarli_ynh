@@ -146,7 +146,7 @@ cp ../conf/updates.txt $final_path/data
 #=================================================
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "$final_path/CONFIG_FILE"
+ynh_store_file_checksum "$final_path/data/config.json.php"
 
 #=================================================
 # GENERIC FINALIZATION
