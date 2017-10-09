@@ -17,13 +17,6 @@ Related topic on Yunohost's forum: https://forum.yunohost.org/t/fr-en-shaarli-ap
 
 Help for dev/testing hightly appreciated :)
 
-## Current features
-
-    * Install / remove scripts
-    * Backup/restore scripts
-    * Adding / removing a link
-    * Upgrade *not tested*
-    * Configure Shaarli during installation
 
 ## Installation information
 
