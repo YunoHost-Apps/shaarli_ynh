@@ -24,7 +24,6 @@ title=$YNH_APP_ARG_TITLE
 privatelinkbydefault=$YNH_APP_ARG_PRIVATELINKBYDEFAULT
 password=$YNH_APP_ARG_PASSWORD
 privateinstance=$YNH_APP_ARG_PRIVATEINSTANCE
-path_url=$YNH_APP_ARG_PATH
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
