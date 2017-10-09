@@ -113,13 +113,6 @@ else
 privatelinkbydefault_php=true
 fi
 
-cp ../conf/config.json.php $final_path/data
-cp ../conf/datastore.php $final_path/data
-cp ../conf/ipbans.php $final_path/data
-cp ../conf/lastupdatecheck.txt $final_path/data
-cp ../conf/log.txt $final_path/data
-cp ../conf/updates.txt $final_path/data
-
 #=================================================
 # MODIFY A CONFIG FILE
 #=================================================
