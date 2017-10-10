@@ -41,14 +41,14 @@
     },
     {
       "name": "is_public",
-      "ask": {
-        "en": "Is it a public Shaarli ?",
-        "fr": "Est-ce un Shaarli public ?"
-      },
-      "choices": ["Yes", "No"],
-      "default": "No"
-    },
-    {
+      "type": "boolean",
+       "ask": {
+                "en": "Is it a public Shaarli?",
+                "fr": "Est-ce un Shaarli public ?"
+                },
+                "default": true
+},
+      {
       "name": "privatelinkbydefault",
       "ask": {
         "en": "Are new links private by default ?",
