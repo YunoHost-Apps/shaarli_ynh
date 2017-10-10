@@ -7,7 +7,7 @@
     		privatelinkbydefault="Yes"
     		password="password"
 		title="shaarli"
-		is_public="1"	(PUBLIC|public=Yes|private=No)
+		is_public=1	(PUBLIC|public=Yes|private=No)
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=1
