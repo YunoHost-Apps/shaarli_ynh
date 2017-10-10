@@ -5,7 +5,6 @@
 		path="/path"	(PATH)
 		admin="john"	(USER)
     		privatelinkbydefault="Yes"
-    		privateinstance="No"
     		password="password"
 		title="shaarli"
 		is_public="Yes"	(PUBLIC|public=Yes|private=No)
