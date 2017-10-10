@@ -42,8 +42,8 @@
     {
       "name": "is_public",
       "ask": {
-        "en": "Is it a public Shaarli site ?",
-        "fr": "Est-ce un site Shaarli public ?"
+        "en": "Is it a public Shaarli ?",
+        "fr": "Est-ce un Shaarli public ?"
       },
       "choices": ["Yes", "No"],
       "default": "No"
@@ -53,15 +53,6 @@
       "ask": {
         "en": "Are new links private by default ?",
         "fr": "Les nouveaux liens sont-ils privés par défaut ?"
-      },
-      "choices": ["Yes", "No"],
-      "default": "Yes"
-    },
-    {
-      "name": "privateinstance",
-      "ask": {
-        "en": "Is this instance private?",
-        "fr": "Cette instance est-elle privée ?"
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
