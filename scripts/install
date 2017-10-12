@@ -98,6 +98,14 @@ ynh_add_nginx_config
 # Create a system user
 ynh_system_user_create $app
 
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
+
 #=================================================
 # SPECIFIC SETUP
 #=================================================
