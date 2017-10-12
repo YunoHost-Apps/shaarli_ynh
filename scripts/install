@@ -114,12 +114,12 @@ fi
 # MODIFY A CONFIG FILE
 #=================================================
 
-ynh_replace_string "@YNH_SALT@" "$salt" "../conf/config.json.php"
-ynh_replace_string "@YNH_ADMIN@" "$admin" "../conf/config.json.php"
-ynh_replace_string "@YNH_HASH@" "$password_hash" "../conf/config.json.php"
-ynh_replace_string "@YNH_TIMEZONE@" "$(cat /etc/timezone)" "../conf/config.json.php"
-ynh_replace_string "@YNH_TITLE@" "$title" "../conf/config.json.php"
-ynh_replace_string "@YNH_PRIVATE_LINK_BY_DEFAULT@" "$privatelinkbydefault_php" "../conf/config.json.php"
+ynh_replace_string "YNH_SALT" "$salt" "../conf/config.json.php"
+ynh_replace_string "YNH_ADMIN" "$admin" "../conf/config.json.php"
+ynh_replace_string "YNH_HASH" "$password_hash" "../conf/config.json.php"
+ynh_replace_string "YNH_TIMEZONE" "$(cat /etc/timezone)" "../conf/config.json.php"
+ynh_replace_string "YNH_TITLE" "$title" "../conf/config.json.php"
+ynh_replace_string "YNH_PRIVATE_LINK_BY_DEFAULT" "$privatelinkbydefault_php" "../conf/config.json.php"
 
 #=================================================
 # SHAARLI CONFIG
