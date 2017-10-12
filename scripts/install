@@ -124,12 +124,12 @@ ynh_replace_string "@YNH_PRIVATE_LINK_BY_DEFAULT@" "$privatelinkbydefault_php" "
 #=================================================
 # SHAARLI CONFIG
 #=================================================
-cp ../conf/config.json.php $final_path/data
-cp ../conf/datastore.php $final_path/data
-cp ../conf/ipbans.php $final_path/data
-cp ../conf/lastupdatecheck.txt $final_path/data
-cp ../conf/log.txt $final_path/data
-cp ../conf/updates.txt $final_path/data
+cp -a ../conf/config.json.php $final_path/data
+cp -a ../conf/datastore.php $final_path/data
+cp -a ../conf/ipbans.php $final_path/data
+cp -a ../conf/lastupdatecheck.txt $final_path/data
+cp -a ../conf/log.txt $final_path/data
+cp -a ../conf/updates.txt $final_path/data
 
 #=================================================
 # STORE THE CHECKSUM OF THE CONFIG FILE
