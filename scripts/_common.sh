@@ -3,14 +3,14 @@
 #
 
 # Shaarli version
-VERSION="0.9.2"
+VERSION="0.9.3"
 
 # Download shaarli (dependencies included)
 # Full Shaarli sources tarball URL
 SHAARLI_SOURCE_URL=https://github.com/shaarli/Shaarli/releases/download/v${VERSION}/shaarli-v${VERSION}-full.tar.gz
 
 # Full Shaarli sources tarball checksum
-SHAARLI_SOURCE_SHA256="f963b7bd2f6696182a9841ba3048a975b6b9bd14174e314943cacf7bde2d961f"
+SHAARLI_SOURCE_SHA256="a29382bcd94002bf90298969ff1f4ab1da23068173c3d4c6aed6c5e5c7f758f9"
 
 #
 # Common helpers
