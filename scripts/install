@@ -1,7 +1,32 @@
 #!/bin/bash
 
-# causes the shell to exit if any subcommand or pipeline returns a non-zero status
-set -e
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+admin=$YNH_APP_ARG_ADMIN
+is_public=$YNH_APP_ARG_IS_PUBLIC
+title=$YNH_APP_ARG_TITLE
+privatelinkbydefault=$YNH_APP_ARG_PRIVATELINKBYDEFAULT
+password=$YNH_APP_ARG_PASSWORD
 
 # This is a multi-instance app, meaning it can be installed several times independently
 # The id of the app as stated in the manifest is available as $YNH_APP_ID
@@ -15,64 +40,81 @@ set -e
 # db names, ...
 app=$YNH_APP_INSTANCE_NAME
 
-# Retrieve arguments
-domain=$YNH_APP_ARG_DOMAIN
-path=$YNH_APP_ARG_PATH/
-admin=$YNH_APP_ARG_ADMIN
-is_public=$YNH_APP_ARG_IS_PUBLIC
-title=$YNH_APP_ARG_TITLE
-privatelinkbydefault=$YNH_APP_ARG_PRIVATELINKBYDEFAULT
-password=$YNH_APP_ARG_PASSWORD
-privateinstance=$YNH_APP_ARG_PRIVATEINSTANCE
-path_url=$YNH_APP_ARG_PATH
-
-# Load common variables and helpers
-source ./_common.sh
-
 #=================================================
-# CHECK IF THE APP CAN BE INSTALLED WITH THIS ARGS
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
 
-path=$(ynh_normalize_url_path $path)	# Vérifie et corrige la syntaxe du path.
-
-
-# Check that the options are compatible
-if [ $is_public = "Yes" ]; then
-  if [ $privateinstance = "Yes" ] ; then
-    ynh_die "Incompatible options: the instance cannot be both public and private" 1
-  fi
-fi
-
-# Check that admin user is an existing account
-sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
-if [[ ! $? -eq 0 ]]; then
-ynh_die "Error : the chosen user does not exist" 1
-fi
-sudo yunohost app setting $app admin -v $admin
-
-# Check domain/path availability
-sudo yunohost app checkurl $domain$path -a $app
-if [[ ! $? -eq 0 ]]; then
-exit 1
-fi
-
-# Install dependencies
-sudo apt-get install php5-cli -y -qq
-
-# Copy files to the right place
-app_home_path=/home/yunohost.app/$app
 final_path=/var/www/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
-sudo mkdir -p $final_path
-# Download and extract in /var/www
-extract_shaarli
+# Normalize the url path syntax
+path_url=$(ynh_normalize_url_path $path_url)
 
-# generate the salt
+# Check web path availability
+ynh_webpath_available $domain $path_url
+# Register (book) web path
+ynh_webpath_register $app $domain $path_url
+
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
+
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path_url
+ynh_app_setting_set $app admin $admin
+ynh_app_setting_set $app is_public $is_public
+ynh_app_setting_set $app title $title
+ynh_app_setting_set $app privatelinkbydefault $privatelinkbydefault
+ynh_app_setting_set $app password $password
+#=================================================
+# STANDARD MODIFICATIONS
+#=================================================
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies php5-cli
+
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+ynh_app_setting_set $app final_path $final_path
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
+# Create a dedicated nginx config
+if [ "$path_url" != "/" ]
+then
+	ynh_replace_string "^#sub_path_only" "" "../conf/nginx.conf"
+fi
+ynh_add_nginx_config
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+
+# Create a system user
+ynh_system_user_create $app
+
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
 salt=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d 'A-Za-z0-9' | sed -n 's/\(.\{24\}\).*/\1/p')
-
-# generate the hash with the password
 password_hash=$(php ../conf/gen_hash.php $password $admin $salt)
-
 # set the proper value for substitution
 if [ $privatelinkbydefault = "No" ]; then
 privatelinkbydefault_php=false
@@ -80,50 +122,68 @@ else
 privatelinkbydefault_php=true
 fi
 
-# Prepare the configuration file
-sudo sed -i "s@YNH_SALT@$salt@g" ../conf/config.json.php 
-sudo sed -i "s@YNH_ADMIN@$admin@g" ../conf/config.json.php
-sudo sed -i "s@YNH_HASH@$password_hash@g" ../conf/config.json.php
-sudo sed -i "s@YNH_TIMEZONE@$(cat /etc/timezone)@g" ../conf/config.json.php
-sudo sed -i "s@YNH_TITLE@$title@g" ../conf/config.json.php
-sudo sed -i "s@YNH_PRIVATE_LINK_BY_DEFAULT@$privatelinkbydefault_php@g" ../conf/config.json.php
-# turn off authentication on the instance
-if [ $privateinstance = "Yes" ] ; then
-  sudo sed -i "/open_shaarli/s/false/true/" ../conf/config.json.php 
+#=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+
+ynh_replace_string "YNH_SALT" "$salt" "../conf/config.json.php"
+ynh_replace_string "YNH_ADMIN" "$admin" "../conf/config.json.php"
+ynh_replace_string "YNH_HASH" "$password_hash" "../conf/config.json.php"
+ynh_replace_string "YNH_TIMEZONE" "$(cat /etc/timezone)" "../conf/config.json.php"
+ynh_replace_string "YNH_TITLE" "$title" "../conf/config.json.php"
+ynh_replace_string "YNH_PRIVATE_LINK_BY_DEFAULT" "$privatelinkbydefault_php" "../conf/config.json.php"
+
+#=================================================
+# SHAARLI CONFIG
+#=================================================
+cp -a ../conf/config.json.php $final_path/data
+cp -a ../conf/datastore.php $final_path/data
+cp -a ../conf/ipbans.php $final_path/data
+cp -a ../conf/lastupdatecheck.txt $final_path/data
+cp -a ../conf/log.txt $final_path/data
+cp -a ../conf/updates.txt $final_path/data
+
+#=================================================
+# STORE THE CHECKSUM OF THE CONFIG FILE
+#=================================================
+
+# Calculate and store the config file checksum into the app settings
+ynh_store_file_checksum "$final_path/data/config.json.php"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions to app files
+chown -R root: $final_path
+
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+
+# Use logrotate to manage application logfile(s)
+ynh_use_logrotate
+
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+if [ $is_public -eq 0 ]
+then	# Remove the public access
+	ynh_app_setting_delete $app skipped_uris
+fi
+# Make app public if necessary
+if [ $is_public -eq 1 ]
+then
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set $app unprotected_uris "/"
 fi
 
-# Populate the data directory of the shaarli instance
-sudo cp ../conf/config.json.php $final_path/data
-sudo cp ../conf/datastore.php $final_path/data
-sudo cp ../conf/ipbans.php $final_path/data
-sudo cp ../conf/lastupdatecheck.txt $final_path/data
-sudo cp ../conf/log.txt $final_path/data
-sudo cp ../conf/updates.txt $final_path/data
+#=================================================
+# RELOAD NGINX
+#=================================================
 
-# set proper permissions
-sudo find $final_path -type f | xargs sudo chmod 644
-sudo find $final_path -type d | xargs sudo chmod 755
-#sudo chown -R root: $final_path
-
-#set proper ownership of the files in /data
-sudo chown www-data:www-data $final_path/data/config.json.php 
-sudo chown www-data:www-data $final_path/data/datastore.php 
-sudo chown www-data:www-data $final_path/data/ipbans.php 
-sudo chown www-data:www-data $final_path/data/lastupdatecheck.txt 
-sudo chown www-data:www-data $final_path/data/log.txt 
-sudo chown www-data:www-data $final_path/data/updates.txt 
-
-# Modify Nginx configuration file and copy it to Nginx conf directory
-sudo sed -i "s@YNH_WWW_PATH@$path@g" ../conf/nginx.conf
-sudo sed -i "s@YNH_ALIAS@$final_path@g" ../conf/nginx.conf
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-
-# Reload Nginx and regenerate SSOwat conf
-if [ $is_public = "Yes" ]; then
-sudo yunohost app setting $app unprotected_uris -v "/"
-elif [ $privateinstance = "Yes" ] ; then
-# Configure SSOWat to prevent access for other users
-sudo yunohost app setting $app allowed_users -v "$admin"
-fi
-sudo service nginx reload
-sudo yunohost app ssowatconf
+systemctl reload nginx

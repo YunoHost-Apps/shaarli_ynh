@@ -38,7 +38,7 @@
         "show_atom": false
     },
     "privacy": {
-        "default_private_links": YNH_PRIVATE_LINK_BY_DEFAULT,
+        "default_private_links": "YNH_PRIVATE_LINK_BY_DEFAULT",
         "hide_public_links": false,
         "hide_timestamps": false
     },

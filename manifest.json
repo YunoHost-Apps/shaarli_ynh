@@ -3,7 +3,7 @@
   "id": "shaarli",
   "packaging_format": 1,
   "requirements": {
-    "yunohost": ">> 2.3.15"
+    "yunohost": ">= 2.7.2"
   },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
@@ -40,28 +40,19 @@
       "default": "/shaarli"
     },
     {
-      "name": "is_public",
-      "ask": {
-        "en": "Is it a public Shaarli site ?",
-        "fr": "Est-ce un site Shaarli public ?"
-      },
-      "choices": ["Yes", "No"],
-      "default": "No"
-    },
+                "name": "is_public",
+                "type": "boolean",
+                "ask": {
+                    "en": "Is it a public application?",
+                    "fr": "Est-ce une application publique ?"
+                },
+                "default": true
+    },    
     {
       "name": "privatelinkbydefault",
       "ask": {
         "en": "Are new links private by default ?",
         "fr": "Les nouveaux liens sont-ils privés par défaut ?"
-      },
-      "choices": ["Yes", "No"],
-      "default": "Yes"
-    },
-    {
-      "name": "privateinstance",
-      "ask": {
-        "en": "Is this instance private?",
-        "fr": "Cette instance est-elle privée ?"
       },
       "choices": ["Yes", "No"],
       "default": "Yes"
