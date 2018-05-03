@@ -16,7 +16,7 @@
   },
   "url": "https://github.com/shaarli/Shaarli",
   "license": "free",
-  "version": "0.9.3",
+  "version": "0.9.6",
   "multi_instance": "true",
   "arguments": {
     "install" : [
