@@ -65,8 +65,9 @@ path_url=$(ynh_normalize_url_path $path_url)
  
 # Create a temporary directory
 tmpdir="$(mktemp -d)"
+mkdir "$tmpdir/data"
 # Backup the config file in the temp dir
-cp -a "$final_path/data/" "$tmpdir/data/"
+cp -a "$final_path/data/*" "$tmpdir/data/*"
 
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
@@ -77,7 +78,7 @@ ynh_secure_remove "$final_path"
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
-sudo cp -a "$tmpdir/data/" "${final_path}/data/"
+sudo cp -a "$tmpdir/data/*" "${final_path}/data/*"
 sudo rm -Rf "$tmpdir"
 
 #=================================================
