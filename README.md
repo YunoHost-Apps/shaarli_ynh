@@ -4,7 +4,7 @@ This app intends to provide to Yunohost's users Shaarli (https://github.com/shaa
 
 It is based on the community version of Shaarli (from @sebsauvage original software).
 
-Current version: **0.9.6**
+Current version: **0.9.7**
 
 Maintainer: @Lapineige
 
