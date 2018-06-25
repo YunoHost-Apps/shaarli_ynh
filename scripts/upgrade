@@ -78,6 +78,7 @@ ynh_secure_remove "$final_path"
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
 sudo cp -a "$tmpdir/data" "${final_path}/data"
+sudo rm -Rf "$tmpdir"
 
 #=================================================
 # NGINX CONFIGURATION
