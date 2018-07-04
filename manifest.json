@@ -50,7 +50,7 @@
         "en": "Is it a public Shaarli site ?",
         "fr": "Est-ce un site Shaarli public ?"
       },
-      "default": true
+      "default": false
     }
     ]
   }
