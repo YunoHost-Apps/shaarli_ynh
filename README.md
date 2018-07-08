@@ -1,8 +1,9 @@
 shaarli_ynh - Shaarli app for Yunohost
 ===========
 This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
-
+![UI](https://framapic.org/ui93xwvieFC5/bdLqopk0JqVv)
 It is based on the community version of Shaarli (from @sebsauvage original software).
+You can get a demo [here](https://shaarli.readthedocs.io/en/master/#demo).
 
 Current version: **0.9.6**
 
