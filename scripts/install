@@ -1,7 +1,31 @@
 #!/bin/bash
 
-# causes the shell to exit if any subcommand or pipeline returns a non-zero status
-set -e
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+
+# Retrieve arguments
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+is_public=$YNH_APP_ARG_IS_PUBLIC
+
 
 # This is a multi-instance app, meaning it can be installed several times independently
 # The id of the app as stated in the manifest is available as $YNH_APP_ID
@@ -13,27 +37,25 @@ set -e
 # The app instance name is probably what you are interested the most, since this is
 # guaranteed to be unique. This is a good unique identifier to define installation path,
 # db names, ...
+
 app=$YNH_APP_INSTANCE_NAME
 
-# Retrieve arguments
-domain=$YNH_APP_ARG_DOMAIN
-path=$YNH_APP_ARG_PATH/
-admin=$YNH_APP_ARG_ADMIN
-is_public=$YNH_APP_ARG_IS_PUBLIC
-title=$YNH_APP_ARG_TITLE
-privatelinkbydefault=$YNH_APP_ARG_PRIVATELINKBYDEFAULT
-password=$YNH_APP_ARG_PASSWORD
-privateinstance=$YNH_APP_ARG_PRIVATEINSTANCE
-path_url=$YNH_APP_ARG_PATH
-
-# Load common variables and helpers
-source ./_common.sh
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THIS ARGS
 #=================================================
 
-path=$(ynh_normalize_url_path $path)	# Vérifie et corrige la syntaxe du path.
+final_path=/var/www/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
+
+# Normalize the url path syntax
+path_url=$(ynh_normalize_url_path $path_url)
+
+# Check web path availability
+ynh_webpath_available $domain $path_url
+# Register (book) web path
+ynh_webpath_register $app $domain $path_url
+
 
 
 # Check that the options are compatible
@@ -43,87 +65,72 @@ if [ $is_public = "Yes" ]; then
   fi
 fi
 
-# Check that admin user is an existing account
-sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
-if [[ ! $? -eq 0 ]]; then
-ynh_die "Error : the chosen user does not exist" 1
-fi
-sudo yunohost app setting $app admin -v $admin
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
 
-# Check domain/path availability
-sudo yunohost app checkurl $domain$path -a $app
-if [[ ! $? -eq 0 ]]; then
-exit 1
-fi
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path_url
+ynh_app_setting_set $app is_public $is_public
+
 
 # Install dependencies
-sudo apt-get install php5-cli -y -qq
+ynh_install_app_dependencies php5-cli 
 
-# Copy files to the right place
-app_home_path=/home/yunohost.app/$app
-final_path=/var/www/$app
 
-sudo mkdir -p $final_path
-# Download and extract in /var/www
-extract_shaarli
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
 
-# generate the salt
-salt=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d 'A-Za-z0-9' | sed -n 's/\(.\{24\}\).*/\1/p')
+ynh_app_setting_set $app final_path $final_path
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
 
-# generate the hash with the password
-password_hash=$(php ../conf/gen_hash.php $password $admin $salt)
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
 
-# set the proper value for substitution
-if [ $privatelinkbydefault = "No" ]; then
-privatelinkbydefault_php=false
-else
-privatelinkbydefault_php=true
-fi
+# Create a dedicated nginx config
+ynh_add_nginx_config
 
-# Prepare the configuration file
-sudo sed -i "s@YNH_SALT@$salt@g" ../conf/config.json.php 
-sudo sed -i "s@YNH_ADMIN@$admin@g" ../conf/config.json.php
-sudo sed -i "s@YNH_HASH@$password_hash@g" ../conf/config.json.php
-sudo sed -i "s@YNH_TIMEZONE@$(cat /etc/timezone)@g" ../conf/config.json.php
-sudo sed -i "s@YNH_TITLE@$title@g" ../conf/config.json.php
-sudo sed -i "s@YNH_PRIVATE_LINK_BY_DEFAULT@$privatelinkbydefault_php@g" ../conf/config.json.php
-# turn off authentication on the instance
-if [ $privateinstance = "Yes" ] ; then
-  sudo sed -i "/open_shaarli/s/false/true/" ../conf/config.json.php 
-fi
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
 
-# Populate the data directory of the shaarli instance
-sudo cp ../conf/config.json.php $final_path/data
-sudo cp ../conf/datastore.php $final_path/data
-sudo cp ../conf/ipbans.php $final_path/data
-sudo cp ../conf/lastupdatecheck.txt $final_path/data
-sudo cp ../conf/log.txt $final_path/data
-sudo cp ../conf/updates.txt $final_path/data
+# Create a system user
+ynh_system_user_create $app
+
+#=================================================
+# PHP-FPM CONFIGURATION
+#=================================================
+
+# Create a dedicated php-fpm config
+ynh_add_fpm_config
 
 # set proper permissions
 sudo find $final_path -type f | xargs sudo chmod 644
 sudo find $final_path -type d | xargs sudo chmod 755
-#sudo chown -R root: $final_path
 
-#set proper ownership of the files in /data
-sudo chown www-data:www-data $final_path/data/config.json.php 
-sudo chown www-data:www-data $final_path/data/datastore.php 
-sudo chown www-data:www-data $final_path/data/ipbans.php 
-sudo chown www-data:www-data $final_path/data/lastupdatecheck.txt 
-sudo chown www-data:www-data $final_path/data/log.txt 
-sudo chown www-data:www-data $final_path/data/updates.txt 
+# Set right permissions for curl install
+chown -R $app: $final_path
 
-# Modify Nginx configuration file and copy it to Nginx conf directory
-sudo sed -i "s@YNH_WWW_PATH@$path@g" ../conf/nginx.conf
-sudo sed -i "s@YNH_ALIAS@$final_path@g" ../conf/nginx.conf
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+#=================================================
+# SETUP SSOWAT
+#=================================================
 
-# Reload Nginx and regenerate SSOwat conf
-if [ $is_public = "Yes" ]; then
-sudo yunohost app setting $app unprotected_uris -v "/"
-elif [ $privateinstance = "Yes" ] ; then
-# Configure SSOWat to prevent access for other users
-sudo yunohost app setting $app allowed_users -v "$admin"
+if [ $is_public -eq 0 ]
+then	# Remove the public access
+	ynh_app_setting_delete $app skipped_uris
 fi
-sudo service nginx reload
-sudo yunohost app ssowatconf
+# Make app public if necessary
+if [ $is_public -eq 1 ]
+then
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set $app unprotected_uris "/"
+fi
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+
+systemctl reload nginx
