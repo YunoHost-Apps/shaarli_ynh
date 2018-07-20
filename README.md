@@ -1,7 +1,6 @@
-# Shaarli app for Yunohost
-=======
-shaarli_ynh - Shaarli app for Yunohost
-===========
+# Shaarli app for Yunohost (shaarli_ynh)
+---
+
 This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
 ![UI](https://framapic.org/ui93xwvieFC5/bdLqopk0JqVv)
 It is based on the community version of Shaarli (from @sebsauvage original software).
@@ -28,6 +27,8 @@ Maintainer: @Lapineige
 - [X] Change url
 
 ## Installation information
+
+During the installation you will be prompted if you want to set this instance as public, which means any people (not just Yunohost users) can consult you Shaarli.
 
 After the installation go to the domain and create your account. After the creation of the account the registration will be locked.
 
