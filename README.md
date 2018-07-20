@@ -1,15 +1,16 @@
-# Shaarli app for Yunohost (shaarli_ynh)
+# Shaarli app for Yunohost
 ---
 
 This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
+
+[![Install Shaarli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=shaarli)
+
+[![Integration level](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/jenkins/job/shaarli%20%28Community%29/lastBuild/consoleFull)
+
 ![UI](https://framapic.org/ui93xwvieFC5/bdLqopk0JqVv)
 It is based on the community version of Shaarli (from @sebsauvage original software).
 You can get a demo [here](https://shaarli.readthedocs.io/en/master/#demo).
 
-
-[![Integration level](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/jenkins/job/shaarli%20%28Community%29/lastBuild/consoleFull)
-
-[![Install Shaarli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=shaarli)
 
 Current version: **0.9.7**
 
@@ -28,7 +29,7 @@ Maintainer: @Lapineige
 
 ## Installation information
 
-During the installation you will be prompted if you want to set this instance as public, which means any people (not just Yunohost users) can consult you Shaarli.
+During the installation app will prompt you to install itself as public or private, if you choose public then anyone (not just Yunohost users) would be able to access your Shaarli instance.
 
 After the installation go to the domain and create your account. After the creation of the account the registration will be locked.
 
