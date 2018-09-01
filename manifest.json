@@ -3,7 +3,7 @@
   "id": "shaarli",
   "packaging_format": 1,
   "requirements": {
-    "yunohost": ">> 2.3.15"
+   "yunohost": ">= 2.7.2"
   },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
@@ -16,8 +16,12 @@
   },
   "url": "https://github.com/shaarli/Shaarli",
   "license": "free",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "multi_instance": "true",
+  "services": [
+        "nginx",
+        "php5-fpm"
+    ],
   "arguments": {
     "install" : [
     {
@@ -41,56 +45,12 @@
     },
     {
       "name": "is_public",
+      "type": "boolean",
       "ask": {
         "en": "Is it a public Shaarli site ?",
         "fr": "Est-ce un site Shaarli public ?"
       },
-      "choices": ["Yes", "No"],
-      "default": "No"
-    },
-    {
-      "name": "privatelinkbydefault",
-      "ask": {
-        "en": "Are new links private by default ?",
-        "fr": "Les nouveaux liens sont-ils privés par défaut ?"
-      },
-      "choices": ["Yes", "No"],
-      "default": "Yes"
-    },
-    {
-      "name": "privateinstance",
-      "ask": {
-        "en": "Is this instance private?",
-        "fr": "Cette instance est-elle privée ?"
-      },
-      "choices": ["Yes", "No"],
-      "default": "Yes"
-    },
-    {
-      "name": "admin",
-      "type": "user",
-      "ask": {
-        "en": "Owner of the Shaarli instance",
-        "fr": "Propriétaire de l'instance Shaarli"
-      },
-      "example": "test"
-    },
-    {
-      "name": "password",
-      "type": "password",
-      "ask": {
-        "en": "Define password for Shaarli user",
-        "fr": "Définissez le mot de passe de l'utilisateur Shaarli"
-      }
-    },
-    {
-      "name": "title",
-      "ask": {
-        "en": "Choose a title for Shaarli's page",
-        "fr": "Choissez un titre pour la page Shaarli"
-      },
-      "example": "Shaarli",
-      "default": "Shaarli"
+      "default": false
     }
     ]
   }
