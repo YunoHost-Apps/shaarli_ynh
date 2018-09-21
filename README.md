@@ -12,7 +12,7 @@ It is based on the community version of Shaarli (from @sebsauvage original softw
 You can get a demo [here](https://shaarli.readthedocs.io/en/master/#demo).
 
 
-Current version: **0.9.7**
+Current version: **0.10.2**
 
 This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
 
