@@ -1,36 +1,7 @@
 #
-# Common variables
-#
-
-# Shaarli version
-VERSION="0.10.2"
-
-# Download shaarli (dependencies included)
-# Full Shaarli sources tarball URL
-SHAARLI_SOURCE_URL=https://github.com/shaarli/Shaarli/releases/download/v${VERSION}/shaarli-v${VERSION}-full.tar.gz
-
-# Full Shaarli sources tarball checksum
-SHAARLI_SOURCE_SHA256="e8e804b5e85283d3f81798bb46b22b2395cc646e6f4411efdbc3477de4d51a41"
-
-#
 # Common helpers
 #
 
-# Source app helpers
-. /usr/share/yunohost/helpers
-
-# Add path
-ynh_normalize_url_path () {
-	path_url=$1
-	test -n "$path_url" || ynh_die "ynh_normalize_url_path expect a URL path as first argument and received nothing."
-	if [ "${path_url:0:1}" != "/" ]; then    # If the first character is not a /
-		path_url="/$path_url"    # Add / at begin of path variable
-	fi
-	if [ "${path_url:${#path_url}-1}" == "/" ] && [ ${#path_url} -gt 1 ]; then    # If the last character is a / and that not the only character.
-		path_url="${path_url:0:${#path_url}-1}"	# Delete the last character
-	fi
-	echo $path_url
-}
 
 # Download and extract Shaarli sources to the given directory
 # usage: extract_shaarli DESTDIR [AS_USER]
