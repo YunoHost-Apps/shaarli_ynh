@@ -26,6 +26,7 @@ Maintainer: @Lapineige
 - [X] Backup/restore scripts
 - [X] Upgrade Script
 - [X] Change url
+- [X] Integrate fail2ban for the app
 
 ## Installation information
 
@@ -36,7 +37,7 @@ After the installation go to the domain and create your account. After the creat
 ## TODO
     
 - [ ] Integrate the LDAP/SSOWAT authentication (currently the authentication is done by Shaarli)
-- [ ] Integrate fail2ban for the app
+
 
 ## Changelog
 

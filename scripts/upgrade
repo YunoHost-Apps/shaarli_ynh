@@ -87,6 +87,9 @@ sudo rm -Rf "$tmpdir"
 # Create a dedicated nginx config
 ynh_add_nginx_config
 
+# Install dependencies
+ynh_install_app_dependencies php-cli 
+
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
@@ -100,6 +103,19 @@ ynh_system_user_create $app
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
+
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
+
+#=================================================
+# SETUP FAIL2BAN
+#=================================================
+
+ynh_add_fail2ban_config "$final_path/data/log.txt" "\s-\s<HOST>\s-\sLogin failed for user.*$" 5
 
 # Set right permissions 
 chown -R $app: $final_path

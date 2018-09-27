@@ -83,7 +83,21 @@ ynh_restore_file "/etc/php5/fpm/conf.d/20-$app.ini"
 #=================================================
 
 # Define and install dependencies
-ynh_install_app_dependencies php5-cli 
+ynh_install_app_dependencies php-cli 
+
+#=================================================
+# RESTORE THE LOGROTATE CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/logrotate.d/$app"
+
+#=================================================
+# RESTORE FAIL2BAN CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/fail2ban/jail.d/$app.conf"
+ynh_restore_file "/etc/fail2ban/filter.d/$app.conf"
+systemctl restart fail2ban
 
 #=================================================
 # GENERIC FINALIZATION

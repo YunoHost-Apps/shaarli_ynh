@@ -19,6 +19,14 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 final_path=$(ynh_app_setting_get $app final_path)
 
+
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
+
+# Remove metapackage and its dependencies
+ynh_remove_app_dependencies
+
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
@@ -39,6 +47,19 @@ ynh_remove_nginx_config
 
 # Remove the dedicated php-fpm config
 ynh_remove_fpm_config
+
+#=================================================
+# REMOVE LOGROTATE CONFIGURATION
+#=================================================
+
+# Remove the app-specific logrotate config
+ynh_remove_logrotate
+
+#=================================================
+# REMOVE FAIL2BAN CONFIGURATION
+#=================================================
+
+ynh_remove_fail2ban_config
 
 #=================================================
 # REMOVE DEDICATED USER
