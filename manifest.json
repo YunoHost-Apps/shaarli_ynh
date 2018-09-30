@@ -17,7 +17,7 @@
   "url": "https://github.com/shaarli/Shaarli",
   "license": "free",
   "version": "0.10.2",
-  "multi_instance": "true",
+  "multi_instance": true,
   "services": [
         "nginx",
         "php5-fpm"

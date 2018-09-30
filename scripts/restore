@@ -83,7 +83,7 @@ ynh_restore_file "/etc/php5/fpm/conf.d/20-$app.ini"
 #=================================================
 
 # Define and install dependencies
-ynh_install_app_dependencies php-cli 
+ynh_install_app_dependencies 'php5-cli|php-cli' php-gettext 'php5-curl|php-curl' 'php-intl|php5-intl'  php-gd 'php-mbstring|base-files(<<9.0)' openssl
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
@@ -105,7 +105,6 @@ systemctl restart fail2ban
 # RELOAD NGINX AND PHP-FPM
 #=================================================
 
-systemctl reload php5-fpm
 systemctl reload nginx
 
 

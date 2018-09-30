@@ -27,7 +27,8 @@
 	Level 2=auto
 	Level 3=auto
 # Level 4: 
-	Level 4=0
+# Not implimented by upstream
+	Level 4=na
 # Level 5: 
 	Level 5=auto
 	Level 6=auto
