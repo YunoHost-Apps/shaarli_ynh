@@ -88,7 +88,7 @@ sudo rm -Rf "$tmpdir"
 ynh_add_nginx_config
 
 # Install dependencies
-ynh_install_app_dependencies 'php5-cli|php-cli' php-gettext 'php5-curl|php-curl' 'php-intl|php5-intl'  php-gd 'php-mbstring|base-files(<<9.0)' openssl
+ynh_install_app_dependencies 'php5-cli|php-cli' php-gettext 'php5-curl|php-curl' 'php-intl|php5-intl' 'php-gd|php5-gd' 'php-mbstring|base-files(<<9.0)' openssl
 
 #=================================================
 # CREATE DEDICATED USER
