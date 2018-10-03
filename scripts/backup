@@ -55,7 +55,7 @@ ynh_backup "/etc/php5/fpm/conf.d/20-$app.ini"
 # BACKUP LOGROTATE
 #=================================================
 
-ynh_backup "/etc/logrotate.d/$app"
+ynh_backup "$final_path/data/log.txt"
 
 #=================================================
 # BACKUP FAIL2BAN CONFIGURATION

@@ -89,7 +89,7 @@ ynh_install_app_dependencies 'php5-cli|php-cli' php-gettext 'php5-curl|php-curl'
 # RESTORE THE LOGROTATE CONFIGURATION
 #=================================================
 
-ynh_restore_file "/etc/logrotate.d/$app"
+ynh_restore_file "$final_path/data/log.txt"
 
 #=================================================
 # RESTORE FAIL2BAN CONFIGURATION
@@ -104,7 +104,7 @@ systemctl restart fail2ban
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-
+systemctl reload php5-fpm
 systemctl reload nginx
 
 
