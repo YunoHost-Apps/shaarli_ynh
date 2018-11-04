@@ -74,7 +74,6 @@ chown -R $app: $final_path
 #=================================================
 
 ynh_restore_file "/etc/php5/fpm/pool.d/$app.conf"
-ynh_restore_file "/etc/php5/fpm/conf.d/20-$app.ini"
 
 #=================================================
 # SPECIFIC RESTORATION
@@ -83,14 +82,27 @@ ynh_restore_file "/etc/php5/fpm/conf.d/20-$app.ini"
 #=================================================
 
 # Define and install dependencies
-ynh_install_app_dependencies php5-cli 
+ynh_install_app_dependencies 'php5-cli|php-cli' php-gettext 'php5-curl|php-curl' 'php-intl|php5-intl'  'php-gd|php5-gd' 'php-mbstring|base-files(<<9.0)' openssl
+
+#=================================================
+# RESTORE THE LOGROTATE CONFIGURATION
+#=================================================
+
+ynh_restore_file "$final_path/data/log.txt"
+
+#=================================================
+# RESTORE FAIL2BAN CONFIGURATION
+#=================================================
+
+ynh_restore_file "/etc/fail2ban/jail.d/$app.conf"
+ynh_restore_file "/etc/fail2ban/filter.d/$app.conf"
+systemctl restart fail2ban
 
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-
 systemctl reload php5-fpm
 systemctl reload nginx
 

@@ -49,4 +49,16 @@ ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 
 ynh_backup "/etc/php5/fpm/pool.d/$app.conf"
-ynh_backup "/etc/php5/fpm/conf.d/20-$app.ini"
+
+#=================================================
+# BACKUP LOGROTATE
+#=================================================
+
+ynh_backup "$final_path/data/log.txt"
+
+#=================================================
+# BACKUP FAIL2BAN CONFIGURATION
+#=================================================
+
+ynh_backup "/etc/fail2ban/jail.d/$app.conf"
+ynh_backup "/etc/fail2ban/filter.d/$app.conf"

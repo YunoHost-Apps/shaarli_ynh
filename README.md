@@ -12,7 +12,7 @@ It is based on the community version of Shaarli (from @sebsauvage original softw
 You can get a demo [here](https://shaarli.readthedocs.io/en/master/#demo).
 
 
-Current version: **0.9.7**
+Current version: **0.10.2**
 
 This app intends to provide to Yunohost's users Shaarli (https://github.com/shaarli/Shaarli), a simple but advanced bookmarking service.
 
@@ -26,6 +26,7 @@ Maintainer: @Lapineige
 - [X] Backup/restore scripts
 - [X] Upgrade Script
 - [X] Change url
+- [X] Integrate fail2ban for the app
 
 ## Installation information
 
@@ -36,7 +37,7 @@ After the installation go to the domain and create your account. After the creat
 ## TODO
     
 - [ ] Integrate the LDAP/SSOWAT authentication (currently the authentication is done by Shaarli)
-- [ ] Integrate fail2ban for the app
+
 
 ## Changelog
 
