@@ -12,6 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_print_info "Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -23,6 +24,7 @@ final_path=$(ynh_app_setting_get $app final_path)
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
+ynh_print_info "Ensuring downward compatibility..."
 
 # Fix is_public as a boolean value
 if [ "$is_public" = "Yes" ]; then
@@ -42,6 +44,7 @@ fi
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_print_info "Backing up the app before upgrading (may take a while)..."
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -52,11 +55,17 @@ ynh_clean_setup () {
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
+
 #=================================================
 # CHECK THE PATH
 #=================================================
 
 # Normalize the URL path syntax
+# N.B. : this is for app installations before YunoHost 2.7
+# where this value might be something like /foo/ or foo/
+# instead of /foo ....
+# If nobody installed your app before 2.7, then you may
+# safely remove this line
 path_url=$(ynh_normalize_url_path $path_url)
 
 #=================================================
@@ -64,7 +73,7 @@ path_url=$(ynh_normalize_url_path $path_url)
 #=================================================
  
 # Create a temporary directory
-tmpdir="$(mktemp -d)"
+tmpdir="$(ynh_smart_mktemp 600)"
 # Backup the config file in the temp dir
 cp -a "$final_path/data" "$tmpdir/"
 
@@ -74,7 +83,7 @@ ynh_secure_remove "$final_path"
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-
+ynh_print_info "Upgrading source files..."
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
 sudo cp -a "$tmpdir/data" "${final_path}/"
@@ -83,23 +92,30 @@ sudo rm -Rf "$tmpdir"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
+ynh_print_info "Upgrading nginx web server configuration..."
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
 
-# Install dependencies
-ynh_install_app_dependencies 'php5-cli|php-cli' php-gettext 'php5-curl|php-curl' 'php-intl|php5-intl' 'php-gd|php5-gd' 'php-mbstring|base-files(<<9.0)' openssl
+#=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+ynh_print_info "Upgrading dependencies..."
+
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
+ynh_print_info "Making sure dedicated system user exists..."
 
-# Create a system user
+# Create a dedicated user (if not existing)
 ynh_system_user_create $app
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
+ynh_print_info "Upgrading php-fpm configuration..."
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
@@ -107,6 +123,7 @@ ynh_add_fpm_config
 #=================================================
 # SETUP LOGROTATE
 #=================================================
+ynh_print_info "Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
@@ -114,7 +131,7 @@ ynh_use_logrotate --non-append
 #=================================================
 # SETUP FAIL2BAN
 #=================================================
-
+ynh_print_info "Upgrading Fail2Ban configuration..."
 ynh_add_fail2ban_config "$final_path/data/log.txt" "\s-\s<HOST>\s-\sLogin failed for user.*$" 5
 
 # Set right permissions 
@@ -123,6 +140,7 @@ chown -R $app: $final_path
 #=================================================
 # SETUP SSOWAT
 #=================================================
+ynh_print_info "Upgrading SSOwat configuration..."
 
 # Make app public if necessary
 if [ $is_public -eq 1 ]
@@ -134,6 +152,14 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
+ynh_print_info "Reloading nginx web server..."
 
 systemctl reload nginx
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Upgrade of $app completed"
+
 

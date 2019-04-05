@@ -1,4 +1,4 @@
-# See here for more informations
+# See here for more information
 # https://github.com/YunoHost/package_check#syntax-check_process-file
 
 # Move this file from check_process.default to check_process when you have filled it.
@@ -16,6 +16,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
+		upgrade=1	from_commit=9109a4ca898156a354ea5a2b2f0df3ead1945d89
 		backup_restore=1
 		multi_instance=1
 		incorrect_path=1
@@ -28,7 +29,7 @@
 	Level 3=auto
 # Level 4: 
 # Not implimented by upstream
-	Level 4=na
+	Level 4=0
 # Level 5: 
 	Level 5=auto
 	Level 6=auto
@@ -37,5 +38,5 @@
 	Level 9=0
 	Level 10=0
 ;;; Options
-Email=
-Notification=none
+Email=anmol@datamol.org
+Notification=change

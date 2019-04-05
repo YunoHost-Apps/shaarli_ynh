@@ -24,6 +24,7 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_print_info "Loading installation settings..."
 
 # Needed for helper "ynh_add_nginx_config"
 final_path=$(ynh_app_setting_get $app final_path)
@@ -31,16 +32,6 @@ final_path=$(ynh_app_setting_get $app final_path)
 # Add settings here as needed by your application
 #db_name=$(ynh_app_setting_get "$app" db_name)
 #db_pwd=$(ynh_app_setting_get $app db_pwd)
-
-#=================================================
-# CHECK THE SYNTAX OF THE PATHS
-#=================================================
-
-test -n "$old_path" || old_path="/"
-test -n "$new_path" || new_path="/"
-new_path=$(ynh_normalize_url_path $new_path)
-old_path=$(ynh_normalize_url_path $old_path)
-
 
 #=================================================
 # CHECK WHICH PARTS SHOULD BE CHANGED
@@ -58,11 +49,13 @@ then
 	change_path=1
 fi
 
+
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
 # MODIFY URL IN NGINX CONF
 #=================================================
+ynh_print_info "Updating nginx web server configuration..."
 
 nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
 
@@ -88,16 +81,18 @@ then
 	ynh_store_file_checksum "/etc/nginx/conf.d/$new_domain.d/$app.conf"
 fi
 
-#=================================================
-# SPECIFIC MODIFICATIONS
-#=================================================
-# ...
-#=================================================
 
 #=================================================
 # GENERIC FINALISATION
 #=================================================
 # RELOAD NGINX
 #=================================================
+ynh_print_info "Reloading nginx web server..."
 
 systemctl reload nginx
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info "Change of URL completed for $app"

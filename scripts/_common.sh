@@ -12,6 +12,13 @@ ynh_delete_file_checksum () {
 	ynh_app_setting_delete $app $checksum_setting_name
 }
 
+#=================================================
+# COMMON VARIABLES
+#=================================================
+
+# dependencies used by the app
+pkg_dependencies="php-cli php-gettext php-curl php-intl php-gd php-mbstring openssl"
+
 
 #=================================================
 # EXPERIMENTAL HELPERS
@@ -75,4 +82,30 @@ ynh_remove_fail2ban_config () {
   ynh_secure_remove "/etc/fail2ban/jail.d/$app.conf"
   ynh_secure_remove "/etc/fail2ban/filter.d/$app.conf"
   sudo systemctl restart fail2ban
+}
+
+ynh_smart_mktemp () {
+        local min_size="${1:-300}"
+        # Transform the minimum size from megabytes to kilobytes
+        min_size=$(( $min_size * 1024 ))
+
+        # Check if there's enough free space in a directory
+        is_there_enough_space () {
+                local free_space=$(df --output=avail "$1" | sed 1d)
+                test $free_space -ge $min_size
+        }
+
+        if is_there_enough_space /tmp; then
+                local tmpdir=/tmp
+        elif is_there_enough_space /var; then
+                local tmpdir=/var
+        elif is_there_enough_space /; then
+                local tmpdir=/   
+        elif is_there_enough_space /home; then
+                local tmpdir=/home
+        else
+		ynh_die "Insufficient free space to continue..."
+        fi
+
+        echo "$(sudo mktemp --directory --tmpdir="$tmpdir")"
 }

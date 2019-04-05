@@ -15,12 +15,12 @@
           "url": ""
   },
   "url": "https://github.com/shaarli/Shaarli",
-  "license": "free",
-  "version": "0.10.2",
+  "license": "MIT",
+  "version": "0.10.3~ynh1",
   "multi_instance": true,
   "services": [
         "nginx",
-        "php5-fpm"
+        "php7.0-fpm"
     ],
   "arguments": {
     "install" : [
