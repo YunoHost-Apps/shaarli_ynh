@@ -11,7 +11,7 @@ It is based on the community version of Shaarli (from @sebsauvage original softw
 You can get a demo [here](https://shaarli.readthedocs.io/en/master/#demo).
 
 
-Current version: **0.10.3**
+Current version: **0.10.4**
 
 Maintainer: @Lapineige
 
