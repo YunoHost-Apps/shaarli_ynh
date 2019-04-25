@@ -76,6 +76,8 @@ path_url=$(ynh_normalize_url_path $path_url)
 tmpdir="$(ynh_smart_mktemp 600)"
 # Backup the config file in the temp dir
 cp -a "$final_path/data" "$tmpdir/"
+# Backup the theme file in the temp dir
+cp -a "$final_path/tpl" "$tmpdir/"
 
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
@@ -87,6 +89,7 @@ ynh_print_info "Upgrading source files..."
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
 sudo cp -a "$tmpdir/data" "${final_path}/"
+sudo cp -a "$tmpdir/tpl" "${final_path}/"
 sudo rm -Rf "$tmpdir"
 
 #=================================================
