@@ -66,7 +66,7 @@ EOF
   ynh_store_file_checksum "$finalfail2banjailconf"
   ynh_store_file_checksum "$finalfail2banfilterconf"
   
-  systemctl restart fail2ban
+  service fail2ban restart
   local fail2ban_error="$(journalctl -u fail2ban | tail -n50 | grep "WARNING.*$app.*")"
   if [ -n "$fail2ban_error" ]
   then
