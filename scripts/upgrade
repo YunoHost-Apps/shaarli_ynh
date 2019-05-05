@@ -132,7 +132,7 @@ ynh_use_logrotate --non-append
 # SETUP FAIL2BAN
 #=================================================
 ynh_print_info "Upgrading Fail2Ban configuration..."
-ynh_add_fail2ban_config "$final_path/data/log.txt" "\s-\s<HOST>\s-\sLogin failed for user.*$" 5
+ynh_add_fail2ban_config_temp "$final_path/data/log.txt" "\s-\s<HOST>\s-\sLogin failed for user.*$" 5
 
 # Set right permissions 
 chown -R $app: $final_path

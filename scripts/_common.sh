@@ -31,7 +31,7 @@ pkg_dependencies="php-cli php-gettext php-curl php-intl php-gd php-mbstring open
 # | arg: failregex - Failregex to be looked for by fail2ban
 # | arg: max_retry - Maximum number of retries allowed before banning IP address - default: 3
 # | arg: ports - Ports blocked for a banned IP address - default: http,https
-ynh_add_fail2ban_config () {
+ynh_add_fail2ban_config_temp () {
    # Process parameters
    logpath=$1
    failregex=$2
