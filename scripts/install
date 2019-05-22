@@ -131,8 +131,8 @@ ynh_add_fpm_config
 
 # set proper permissions
 ynh_print_info "Set permissions..."
-sudo find $final_path -type f | xargs sudo chmod 644
-sudo find $final_path -type d | xargs sudo chmod 755
+find $final_path -type f | xargs sudo chmod 644
+find $final_path -type d | xargs sudo chmod 755
 
 # Set right permissions for curl install
 ynh_print_info "Set rights..."
