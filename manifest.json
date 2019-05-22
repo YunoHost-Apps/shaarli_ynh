@@ -50,6 +50,10 @@
         "en": "Is it a public Shaarli site ?",
         "fr": "Est-ce un site Shaarli public ?"
       },
+      "help": {
+        "en": "If set as public, Shaarli will be visible to anyone, including non-Yunohost users. However only Shaarli users can add bookmarks. Set this to public if you want people to see your (public) bookmarks"
+        "fr": "Si configuré en public, Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre Yunohost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Activer la visibilité publique si vous voulez que les gens voient vos marques-pages (publiques)."
+      },
       "default": false
     }
     ]
