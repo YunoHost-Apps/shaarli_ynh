@@ -129,6 +129,8 @@ ynh_add_fpm_config
 ynh_print_info "Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
+# Temporary fix for .txt log file and ynh_use_logrotate
+ln -s "$final_path/data/log.txt" "$final_path/data/log.log"
 ynh_use_logrotate --non-append
 
 #=================================================
