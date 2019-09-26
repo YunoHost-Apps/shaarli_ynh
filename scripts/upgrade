@@ -130,7 +130,11 @@ ynh_print_info "Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
 # Temporary fix for .txt log file and ynh_use_logrotate
-ln -s "$final_path/data/log.txt" "$final_path/data/log.log"
+if [ -d "$final_path/data/log.txt" ]
+then
+    rm -r "$final_path/data/log.txt"
+    touch "$final_path/data/log.txt"
+fi
 ynh_use_logrotate --non-append
 
 #=================================================
