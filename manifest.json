@@ -3,7 +3,7 @@
   "id": "shaarli",
   "packaging_format": 1,
   "requirements": {
-   "yunohost": ">= 3.0.0"
+   "yunohost": ">= 3.6.5"
   },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
@@ -16,7 +16,7 @@
   },
   "url": "https://github.com/shaarli/Shaarli",
   "license": "MIT",
-  "version": "0.10.4~ynh2",
+  "version": "0.10.4~ynh3",
   "multi_instance": true,
   "services": [
         "nginx",

@@ -152,6 +152,8 @@ ynh_print_info "Configuring log rotation..."
 ###		- And the section "SETUP LOGROTATE" in the upgrade script
 
 # Use logrotate to manage application logfile(s)
+# We gotta create the file explicitly to avoid triggering https://github.com/YunoHost/issues/issues/1390
+touch "$final_path/data/log.txt"
 ynh_use_logrotate "$final_path/data/log.txt"
 
 
