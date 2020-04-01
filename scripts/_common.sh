@@ -46,7 +46,7 @@ ynh_add_fail2ban_config_temp () {
   ynh_backup_if_checksum_is_different "$finalfail2banjailconf" 1
   ynh_backup_if_checksum_is_different "$finalfail2banfilterconf" 1
   
-  sudo tee $finalfail2banjailconf <<EOF
+  tee $finalfail2banjailconf <<EOF
 [$app]
 enabled = true
 port = $ports
@@ -55,7 +55,7 @@ logpath = $logpath
 maxretry = $max_retry
 EOF
 
-  sudo tee $finalfail2banfilterconf <<EOF
+  tee $finalfail2banfilterconf <<EOF
 [INCLUDES]
 before = common.conf
 [Definition]
@@ -81,7 +81,7 @@ EOF
 ynh_remove_fail2ban_config () {
   ynh_secure_remove "/etc/fail2ban/jail.d/$app.conf"
   ynh_secure_remove "/etc/fail2ban/filter.d/$app.conf"
-  sudo systemctl restart fail2ban
+  systemctl restart fail2ban
 }
 
 ynh_smart_mktemp () {
@@ -107,5 +107,5 @@ ynh_smart_mktemp () {
 		ynh_die "Insufficient free space to continue..."
         fi
 
-        echo "$(sudo mktemp --directory --tmpdir="$tmpdir")"
+        echo "$(mktemp --directory --tmpdir="$tmpdir")"
 }
