@@ -129,15 +129,6 @@ ynh_print_info "Configuring php-fpm..."
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
 
-# set proper permissions
-ynh_print_info "Set permissions..."
-find $final_path -type f | xargs chmod 644
-find $final_path -type d | xargs chmod 755
-
-# Set right permissions for curl install
-ynh_print_info "Set rights..."
-chown -R $app: $final_path
-
 #=================================================
 # SETUP LOGROTATE
 #=================================================
@@ -156,6 +147,17 @@ ynh_print_info "Configuring log rotation..."
 touch "$final_path/data/log.txt"
 ynh_use_logrotate "$final_path/data/log.txt"
 
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+# set proper permissions
+ynh_print_info "Set permissions..."
+find $final_path -type f | xargs chmod 644
+find $final_path -type d | xargs chmod 755
+
+# Set right permissions for curl install
+ynh_print_info "Set rights..."
+chown -R $app: $final_path
 
 #=================================================
 # SETUP FAIL2BAN
