@@ -149,11 +149,13 @@ ynh_use_logrotate "$final_path/data/log.txt"
 #=================================================
 # set proper permissions
 ynh_script_progression --message="Set permissions..."
+
 find $final_path -type f | xargs chmod 644
 find $final_path -type d | xargs chmod 755
 
 # Set right permissions for curl install
 ynh_script_progression --message="Set rights..."
+
 chown -R $app: $final_path
 
 #=================================================
