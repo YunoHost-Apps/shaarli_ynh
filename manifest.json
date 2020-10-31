@@ -16,7 +16,7 @@
   },
   "url": "https://github.com/shaarli/Shaarli",
   "license": "MIT",
-  "version": "0.10.4~ynh3",
+  "version": "0.12.0~ynh1",
   "multi_instance": true,
   "services": [
         "nginx",
