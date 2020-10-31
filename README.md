@@ -15,9 +15,9 @@ This app intends to provide Yunohost's users with Shaarli (https://github.com/sh
 
 ## Screenshots
 
-![](https://imgur.com/zGF4d6L)
+![](https://i.imgur.com/zGF4d6L.jpg)
 
-![](https://imgur.com/27wYsbC)
+![](https://i.imgur.com/27wYsbC.png)
 
 ## Demo
 
