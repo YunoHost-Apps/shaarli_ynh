@@ -155,7 +155,6 @@ find $final_path -type d | xargs chmod 755
 
 # Set right permissions for curl install
 ynh_script_progression --message="Set rights..."
-
 chown -R $app: $final_path
 
 #=================================================
