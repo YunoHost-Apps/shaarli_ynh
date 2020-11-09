@@ -104,7 +104,7 @@ ynh_print_info "Upgrading source files..."
 ynh_setup_source "$final_path"
 cp -a "$tmpdir/data" "${final_path}/"
 cp -a "$tmpdir/tpl" "${final_path}/"
-rm -Rf "$tmpdir"
+ynh_secure_remove "$tmpdir"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -147,7 +147,7 @@ ynh_script_progression --message="Upgrading logrotate configuration..."
 # Temporary fix for .txt log file and ynh_use_logrotate
 if [ -d "$final_path/data/log.txt" ]
 then
-    rm -r "$final_path/data/log.txt"
+    ynh_secure_remove "$final_path/data/log.txt"
     touch "$final_path/data/log.txt"
 fi
 ynh_use_logrotate --non-append
