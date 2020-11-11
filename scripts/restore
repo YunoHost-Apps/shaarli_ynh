@@ -33,7 +33,6 @@ path_url=$(ynh_app_setting_get   --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
-
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
@@ -66,7 +65,6 @@ ynh_script_progression --message="Recreating the dedicated system user..."
 
 # Create the dedicated user (if not existing)
 ynh_system_user_create --username=$app
-
 
 #=================================================
 # RESTORE USER RIGHTS

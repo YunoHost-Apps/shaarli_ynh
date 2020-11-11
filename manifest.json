@@ -47,7 +47,7 @@
       "name": "is_public",
       "type": "boolean",
       "ask": {
-        "en": "Is it a public Shaarli site ?",
+        "en": "Is it a public Shaarli site?",
         "fr": "Est-ce un site Shaarli public ?"
       },
       "help": {
@@ -55,7 +55,7 @@
         "fr": "Si configuré en public, Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre Yunohost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Activer la visibilité publique si vous voulez que les gens voient vos marques-pages (publiques)."
       },
       "default": false
-    }
+      }
     ]
   }
 }
