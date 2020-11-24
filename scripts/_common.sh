@@ -54,7 +54,7 @@ ynh_smart_mktemp () {
                 ynh_die "Insufficient free space to continue..."
         fi
 
-        echo "$(sudo mktemp --directory --tmpdir="$tmpdir")"
+        echo "$(mktemp --directory --tmpdir="$tmpdir")"
 }
 
 #=================================================
