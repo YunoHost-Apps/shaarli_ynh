@@ -68,9 +68,9 @@ ynh_setup_source --dest_dir="$final_path"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring nginx web server..."
+ynh_script_progression --message="Configuring NGINX web server..."
 
-# Create a dedicated nginx config
+# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
@@ -83,9 +83,9 @@ ynh_system_user_create --username=$app
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_print_info "Configuring php-fpm..."
+ynh_print_info "Configuring PHP-FPM..."
 
-# Create a dedicated php-fpm config
+# Create a dedicated PHP-FPM config
 ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
@@ -113,9 +113,9 @@ chown -R $app: $final_path
 #=================================================
 # SETUP FAIL2BAN
 #=================================================
-ynh_script_progression --message="Configuring fail2ban..."
+ynh_script_progression --message="Configuring Fail2Ban..."
 
-# Create a dedicated fail2ban config
+# Create a dedicated Fail2Ban config
 
 ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
@@ -134,7 +134,7 @@ fi
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..."
+ynh_script_progression --message="Reloading NGINX web server..."
 
 ynh_systemd_action --service_name=nginx --action=reload
 
