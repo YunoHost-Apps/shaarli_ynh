@@ -25,6 +25,9 @@ ynh_abort_if_errors
 #=================================================
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
+admin=$YNH_APP_ARG_ADMIN
+password=$YNH_APP_ARG_PASSWORD
+title=$YNH_APP_ARG_TITLE
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
@@ -103,6 +106,34 @@ ynh_script_progression --message="Configuring log rotation..."
 # Use logrotate to manage application logfile(s)
 touch "$final_path/data/log.txt"
 ynh_use_logrotate "$final_path/data/log.txt"
+
+#=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+ynh_script_progression --message="Configuring Shaarli..."
+
+# Get the timezone
+timezone=$(cat /etc/timezone)
+
+# Generate the salt
+salt=$(php${YNH_PHP_VERSION} -r 'echo sha1(uniqid("", true) ."_". mt_rand());')
+
+# Generate the hash with the password
+hash=$(php${YNH_PHP_VERSION} -r "echo sha1('${password}'.'${admin}'.'${salt}');")
+
+# Generate the API secret
+secret=$(php${YNH_PHP_VERSION} -r "echo str_shuffle(substr(hash_hmac('sha512', uniqid('${salt}'), '${admin}'), 10, 12));")
+
+# Set default_private_links. By default, make them public if the app is public.
+if [ $is_public -eq 1 ]
+then
+        default_private_links=false
+else
+        default_private_links=true
+fi
+
+# Installing the config file and replace the placeholders
+ynh_add_config --template="../conf/config.json.php" --destination="$final_path/data/config.json.php"
 
 #=================================================
 # SECURE FILES AND DIRECTORIES

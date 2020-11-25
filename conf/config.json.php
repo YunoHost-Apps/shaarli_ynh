@@ -8,7 +8,9 @@
         "updates": "data\/updates.txt",
         "log": "data\/log.txt",
         "update_check": "data\/lastupdatecheck.txt",
+        "history": "data\/history.php",
         "raintpl_tpl": "tpl\/",
+        "theme": "default",
         "raintpl_tmp": "tmp\/",
         "thumbnails_cache": "cache",
         "page_cache": "pagecache"
@@ -17,7 +19,12 @@
         "ban_after": 4,
         "ban_duration": 1800,
         "session_protection_disabled": false,
-        "open_shaarli": false
+        "open_shaarli": false,
+        "allowed_protocols": [
+            "ftp",
+            "ftps",
+            "magnet"
+        ]
     },
     "general": {
         "header_link": "?",
@@ -25,8 +32,10 @@
         "enabled_plugins": [
             "qrcode"
         ],
-        "timezone": "YNH_TIMEZONE",
-        "title": "YNH_TITLE"
+        "default_note_title": "Note: ",
+        "retrieve_description": false,
+        "timezone": "__TIMEZONE__",
+        "title": "__TITLE__"
     },
     "updates": {
         "check_updates": true,
@@ -35,26 +44,35 @@
     },
     "feed": {
         "rss_permalinks": true,
-        "show_atom": false
+        "show_atom": true
     },
     "privacy": {
-        "default_private_links": YNH_PRIVATE_LINK_BY_DEFAULT,
+        "default_private_links": __DEFAULT_PRIVATE_LINKS__,
         "hide_public_links": false,
-        "hide_timestamps": false
+        "force_login": false,
+        "hide_timestamps": false,
+        "remember_user_default": true
     },
-    "thumbnail": {
-        "enable_thumbnails": true,
-        "enable_localcache": true
+    "thumbnails": {
+        "mode": "all",
+        "width": "125",
+        "height": "90"
     },
-    "redirector": {
-        "url": "",
-        "encode_url": true
+    "translation": {
+        "language": "auto",
+        "mode": "php",
+        "extensions": []
     },
     "plugins": [],
+    "formatter": "markdown",
     "credentials": {
-        "login": "YNH_ADMIN",
-        "salt": "YNH_SALT",
-        "hash": "YNH_HASH"
+        "login": "__ADMIN__",
+        "salt": "__SALT__",
+        "hash": "__HASH__"
+    },
+    "api": {
+        "enabled": true,
+        "secret": "__SECRET__"
     }
 }
 */ ?>
