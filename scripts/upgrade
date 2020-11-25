@@ -150,15 +150,25 @@ fi
 ynh_use_logrotate --non-append
 
 #=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+# set proper permissions
+ynh_script_progression --message="Set permissions..."
+
+find $final_path -type f | xargs chmod 644
+find $final_path -type d | xargs chmod 755
+
+# Set right permissions for curl install
+ynh_script_progression --message="Set rights..."
+chown -R $app: $final_path
+
+#=================================================
 # UPGRADE FAIL2BAN
 #=================================================
 ynh_script_progression --message="Reconfiguring Fail2Ban..."
 
 # Create a dedicated fail2ban config
 ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
-
-# Set right permissions
-chown -R $app: $final_path
 
 #=================================================
 # SETUP SSOWAT
