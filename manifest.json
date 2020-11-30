@@ -2,6 +2,7 @@
   "name": "Shaarli",
   "id": "shaarli",
   "packaging_format": 1,
+
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
     "fr": "Clone de delicious, rapide, simple et sans base de données."
