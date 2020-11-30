@@ -19,15 +19,10 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		upgrade=1	from_commit=c492793c6855ce2d8d2af8656725a9ef8ed27923
 		backup_restore=1
 		multi_instance=1
 		port_already_use=0
 		change_url=1
-
-;;; Levels
-	# If the level 5 (Package linter) is forced to 1. Please add justifications here.
-	Level 5=auto
 ;;; Options
 Email=
 Notification=none
