@@ -31,10 +31,6 @@ After the installation is complete, go to the domain where the Shaarli is instal
 
  * Official documentation: https://shaarli.readthedocs.io/en/master/
  * YunoHost documentation: If specific documentation is needed, feel free to contribute.
- 
-## TODO/Limitations
-
-- [ ] Integrate the LDAP/SSOWAT authentication
 
 ## Changelog
 
