@@ -12,39 +12,48 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_print_info "Loading installation settings..."
+ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get $app domain)
-path_url=$(ynh_app_setting_get $app path)
-is_public=$(ynh_app_setting_get $app is_public)
-final_path=$(ynh_app_setting_get $app final_path)
+domain=$(ynh_app_setting_get     --app=$app --key=domain)
+path_url=$(ynh_app_setting_get   --app=$app --key=path)
+is_public=$(ynh_app_setting_get  --app=$app --key=is_public)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+
+upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_print_info "Ensuring downward compatibility..."
-
-# Fix is_public as a boolean value
-if [ "$is_public" = "Yes" ]; then
-	ynh_app_setting_set $app is_public 1
-	is_public=1
-elif [ "$is_public" = "No" ]; then
-	ynh_app_setting_set $app is_public 0
-	is_public=0
-fi
+ynh_script_progression --message="Ensuring downward compatibility..."
 
 # If final_path doesn't exist, create it
-if [ -z $final_path ]; then
+if [ -z "$final_path" ]; then
 	final_path=/var/www/$app
-	ynh_app_setting_set $app final_path $final_path
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+
+# Cleaning legacy permissions
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+
+if [ -n "$is_public" ]; then
+	# Delete is_public key. It is now handled by the permissions system
+	ynh_app_setting_delete --app=$app --key=is_public
+	# Delete legacy permission settings
+	ynh_app_setting_delete --app=$app --key=unprotected_uris
+	ynh_app_setting_delete --app=$app --key=protected_uris
+	ynh_app_setting_delete --app=$app --key=skipped_uris
 fi
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
-ynh_print_info "Backing up the app before upgrading (may take a while)..."
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..."
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -55,23 +64,22 @@ ynh_clean_setup () {
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
-
 #=================================================
-# CHECK THE PATH
+# DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-# Normalize the URL path syntax
-# N.B. : this is for app installations before YunoHost 2.7
-# where this value might be something like /foo/ or foo/
-# instead of /foo ....
-# If nobody installed your app before 2.7, then you may
-# safely remove this line
-path_url=$(ynh_normalize_url_path $path_url)
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	ynh_script_progression --message="Upgrading source files..."
+
+	# Download, check integrity, uncompress and patch the source from app.src
+	ynh_setup_source --dest_dir="$final_path"
+fi
 
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
- 
+
 # Create a temporary directory
 tmpdir="$(ynh_smart_mktemp 600)"
 # Backup the config file in the temp dir
@@ -90,85 +98,90 @@ ynh_print_info "Upgrading source files..."
 ynh_setup_source "$final_path"
 cp -a "$tmpdir/data" "${final_path}/"
 cp -a "$tmpdir/tpl" "${final_path}/"
-rm -Rf "$tmpdir"
+ynh_secure_remove "$tmpdir"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_print_info "Upgrading nginx web server configuration..."
+ynh_script_progression --message="Upgrading NGINX web server configuration..."
 
-# Create a dedicated nginx config
+# Bug in Nginx with locations and aliases (see http://stackoverflow.com/a/35102259 )
+if [ $path_url = "/" ]; then
+  ynh_replace_string "__PATH_HACK__" "" "../conf/nginx.conf"
+else
+  ynh_replace_string "__PATH_HACK__" "$path_url/$path_url" "../conf/nginx.conf"
+fi
+
+# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_print_info "Upgrading dependencies..."
+ynh_script_progression --message="Upgrading dependencies..."
 
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-ynh_print_info "Making sure dedicated system user exists..."
+ynh_script_progression --message="Making sure dedicated system user exists..."
 
 # Create a dedicated user (if not existing)
-ynh_system_user_create $app
+ynh_system_user_create --username=$app
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_print_info "Upgrading php-fpm configuration..."
+ynh_script_progression --message="Upgrading PHP-FPM configuration..."
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+ynh_add_fpm_config --usage=low --footprint=low --package="$extra_php_dependencies"
 
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_print_info "Upgrading logrotate configuration..."
+ynh_script_progression --message="Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
 # Temporary fix for .txt log file and ynh_use_logrotate
 if [ -d "$final_path/data/log.txt" ]
 then
-    rm -r "$final_path/data/log.txt"
+    ynh_secure_remove "$final_path/data/log.txt"
     touch "$final_path/data/log.txt"
 fi
 ynh_use_logrotate --non-append
 
 #=================================================
-# SETUP FAIL2BAN
+# SECURE FILES AND DIRECTORIES
 #=================================================
-ynh_print_info "Upgrading Fail2Ban configuration..."
-ynh_add_fail2ban_config_temp "$final_path/data/log.txt" "\s-\s<HOST>\s-\sLogin failed for user.*$" 5
+# set proper permissions
+ynh_script_progression --message="Set permissions..."
 
-# Set right permissions 
+find $final_path -type f | xargs chmod 644
+find $final_path -type d | xargs chmod 755
+
+# Set right permissions for curl install
+ynh_script_progression --message="Set rights..."
 chown -R $app: $final_path
 
 #=================================================
-# SETUP SSOWAT
+# UPGRADE FAIL2BAN
 #=================================================
-ynh_print_info "Upgrading SSOwat configuration..."
+ynh_script_progression --message="Reconfiguring Fail2Ban..."
 
-# Make app public if necessary
-if [ $is_public -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway
-	ynh_app_setting_set $app unprotected_uris "/"
-fi
+# Create a dedicated fail2ban config
+ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_print_info "Reloading nginx web server..."
+ynh_script_progression --message="Reloading NGINX web server..."
 
-systemctl reload nginx
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_print_info "Upgrade of $app completed"
-
-
+ynh_script_progression --message="Upgrade of $app completed"
