@@ -73,7 +73,7 @@ ynh_setup_source --dest_dir="$final_path"
 #=================================================
 ynh_script_progression --message="Configuring NGINX web server..."
 
-# Bug in Nginx with locations and aliases (see http://stackoverflow.com/a/35102259 )
+# Bug in NGINX with locations and aliases (see http://stackoverflow.com/a/35102259 )
 if [ $path_url = "/" ]; then
   ynh_replace_string "__PATH_HACK__" "" "../conf/nginx.conf"
 else
