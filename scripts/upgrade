@@ -105,7 +105,7 @@ ynh_secure_remove "$tmpdir"
 #=================================================
 ynh_script_progression --message="Upgrading NGINX web server configuration..."
 
-# Bug in Nginx with locations and aliases (see http://stackoverflow.com/a/35102259 )
+# Bug in NGINX with locations and aliases (see http://stackoverflow.com/a/35102259 )
 if [ $path_url = "/" ]; then
   ynh_replace_string "__PATH_HACK__" "" "../conf/nginx.conf"
 else
