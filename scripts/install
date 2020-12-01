@@ -53,13 +53,6 @@ ynh_app_setting_set --app=$app --key=path      --value=$path_url
 ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 
 #=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Installing dependencies..."
-
-ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..."
