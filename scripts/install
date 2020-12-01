@@ -133,14 +133,11 @@ ynh_add_config --template="../conf/config.json.php" --destination="$final_path/d
 # SECURE FILES AND DIRECTORIES
 #=================================================
 # set proper permissions
-ynh_script_progression --message="Set permissions..."
+ynh_script_progression --message="Securing files and directories..."
 
-find $final_path -type f | xargs chmod 644
-find $final_path -type d | xargs chmod 755
-
-# Set right permissions for curl install
-ynh_script_progression --message="Set rights..."
 chown -R $app: $final_path
+chmod -R g+rX $final_path
+chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 
 #=================================================
 # SETUP FAIL2BAN

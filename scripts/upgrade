@@ -72,33 +72,26 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..."
 
+	# Create a temporary directory
+	tmpdir="$(mktemp -d)"
+
+	# Backup the config file in the temp dir
+	cp -a "$final_path/data" "$tmpdir/data"
+	cp -a "$final_path/tpl" "$tmpdir/tpl"
+
+	# Remove the app directory securely
+	ynh_secure_remove "$final_path"
+
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$final_path"
+
+	cp -a "$tmpdir/data" "$final_path/"
+	cp -a "$tmpdir/tpl" "$final_path/"
+
+	# Remove the tmp directory securely
+	ynh_secure_remove --file="$tmpdir"
+
 fi
-
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-
-# Create a temporary directory
-tmpdir="$(ynh_smart_mktemp 600)"
-# Backup the config file in the temp dir
-cp -a "$final_path/data" "$tmpdir/"
-# Backup the theme file in the temp dir
-cp -a "$final_path/tpl" "$tmpdir/"
-
-# Remove the app directory securely
-ynh_secure_remove "$final_path"
-
-#=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
-#=================================================
-ynh_print_info "Upgrading source files..."
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path"
-cp -a "$tmpdir/data" "${final_path}/"
-cp -a "$tmpdir/tpl" "${final_path}/"
-ynh_secure_remove "$tmpdir"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -143,20 +136,17 @@ then
     ynh_secure_remove "$final_path/data/log.txt"
     touch "$final_path/data/log.txt"
 fi
+
 ynh_use_logrotate --non-append
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-# set proper permissions
-ynh_script_progression --message="Set permissions..."
+ynh_script_progression --message="Securing files and directories..."
 
-find $final_path -type f | xargs chmod 644
-find $final_path -type d | xargs chmod 755
-
-# Set right permissions for curl install
-ynh_script_progression --message="Set rights..."
 chown -R $app: $final_path
+chmod -R g+rX $final_path
+chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 
 #=================================================
 # UPGRADE FAIL2BAN
