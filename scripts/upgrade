@@ -16,9 +16,9 @@ ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get     --app=$app --key=domain)
-path_url=$(ynh_app_setting_get   --app=$app --key=path)
-is_public=$(ynh_app_setting_get  --app=$app --key=is_public)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
@@ -37,9 +37,6 @@ if [ -z "$final_path" ]; then
 	final_path=/var/www/$app
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
-
-# Cleaning legacy permissions
-is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 
 if [ -n "$is_public" ]; then
 	# Delete is_public key. It is now handled by the permissions system
@@ -90,7 +87,6 @@ then
 
 	# Remove the tmp directory securely
 	ynh_secure_remove --file="$tmpdir"
-
 fi
 
 #=================================================
@@ -146,7 +142,7 @@ chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 #=================================================
 ynh_script_progression --message="Reconfiguring Fail2Ban..."
 
-# Create a dedicated fail2ban config
+# Create a dedicated Fail2Ban config
 ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
