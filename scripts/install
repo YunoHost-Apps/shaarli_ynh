@@ -53,13 +53,6 @@ ynh_app_setting_set --app=$app --key=path      --value=$path_url
 ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 
 #=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Installing dependencies..."
-
-ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..."
@@ -72,13 +65,6 @@ ynh_setup_source --dest_dir="$final_path"
 # NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Configuring NGINX web server..."
-
-# Bug in Nginx with locations and aliases (see http://stackoverflow.com/a/35102259 )
-if [ $path_url = "/" ]; then
-  ynh_replace_string "__PATH_HACK__" "" "../conf/nginx.conf"
-else
-  ynh_replace_string "__PATH_HACK__" "$path_url/$path_url" "../conf/nginx.conf"
-fi
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
@@ -140,14 +126,11 @@ ynh_add_config --template="../conf/config.json.php" --destination="$final_path/d
 # SECURE FILES AND DIRECTORIES
 #=================================================
 # set proper permissions
-ynh_script_progression --message="Set permissions..."
+ynh_script_progression --message="Securing files and directories..."
 
-find $final_path -type f | xargs chmod 644
-find $final_path -type d | xargs chmod 755
-
-# Set right permissions for curl install
-ynh_script_progression --message="Set rights..."
 chown -R $app: $final_path
+chmod -R g+rX $final_path
+chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 
 #=================================================
 # SETUP FAIL2BAN

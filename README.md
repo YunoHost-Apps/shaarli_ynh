@@ -9,7 +9,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 ## Overview
 [Shaarli](https://github.com/shaarli/Shaarli) intends to provide YunoHost's users with a simple but advanced bookmarking service.
 
-**Shipped version:** 0.12.0
+**Shipped version:** 0.12.1
 
 ## Screenshots
 
@@ -31,10 +31,6 @@ After the installation is complete, go to the domain where the Shaarli is instal
 
  * Official documentation: https://shaarli.readthedocs.io/en/master/
  * YunoHost documentation: If specific documentation is needed, feel free to contribute.
- 
-## TODO/Limitations
-
-- [ ] Integrate the LDAP/SSOWAT authentication
 
 ## Changelog
 

@@ -16,9 +16,9 @@ ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get     --app=$app --key=domain)
-path_url=$(ynh_app_setting_get   --app=$app --key=path)
-is_public=$(ynh_app_setting_get  --app=$app --key=is_public)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
@@ -37,9 +37,6 @@ if [ -z "$final_path" ]; then
 	final_path=/var/www/$app
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
-
-# Cleaning legacy permissions
-is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 
 if [ -n "$is_public" ]; then
 	# Delete is_public key. It is now handled by the permissions system
@@ -72,55 +69,33 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..."
 
+	# Create a temporary directory
+	tmpdir="$(mktemp -d)"
+
+	# Backup the config file in the temp dir
+	cp -a "$final_path/data" "$tmpdir/data"
+	cp -a "$final_path/tpl" "$tmpdir/tpl"
+
+	# Remove the app directory securely
+	ynh_secure_remove "$final_path"
+
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$final_path"
+
+	cp -a "$tmpdir/data" "$final_path/"
+	cp -a "$tmpdir/tpl" "$final_path/"
+
+	# Remove the tmp directory securely
+	ynh_secure_remove --file="$tmpdir"
 fi
-
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-
-# Create a temporary directory
-tmpdir="$(ynh_smart_mktemp 600)"
-# Backup the config file in the temp dir
-cp -a "$final_path/data" "$tmpdir/"
-# Backup the theme file in the temp dir
-cp -a "$final_path/tpl" "$tmpdir/"
-
-# Remove the app directory securely
-ynh_secure_remove "$final_path"
-
-#=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
-#=================================================
-ynh_print_info "Upgrading source files..."
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path"
-cp -a "$tmpdir/data" "${final_path}/"
-cp -a "$tmpdir/tpl" "${final_path}/"
-ynh_secure_remove "$tmpdir"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Upgrading NGINX web server configuration..."
 
-# Bug in Nginx with locations and aliases (see http://stackoverflow.com/a/35102259 )
-if [ $path_url = "/" ]; then
-  ynh_replace_string "__PATH_HACK__" "" "../conf/nginx.conf"
-else
-  ynh_replace_string "__PATH_HACK__" "$path_url/$path_url" "../conf/nginx.conf"
-fi
-
 # Create a dedicated NGINX config
 ynh_add_nginx_config
-
-#=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..."
-
-ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
@@ -150,27 +125,24 @@ then
     ynh_secure_remove "$final_path/data/log.txt"
     touch "$final_path/data/log.txt"
 fi
+
 ynh_use_logrotate --non-append
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-# set proper permissions
-ynh_script_progression --message="Set permissions..."
+ynh_script_progression --message="Securing files and directories..."
 
-find $final_path -type f | xargs chmod 644
-find $final_path -type d | xargs chmod 755
-
-# Set right permissions for curl install
-ynh_script_progression --message="Set rights..."
 chown -R $app: $final_path
+chmod -R g+rX $final_path
+chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 
 #=================================================
 # UPGRADE FAIL2BAN
 #=================================================
 ynh_script_progression --message="Reconfiguring Fail2Ban..."
 
-# Create a dedicated fail2ban config
+# Create a dedicated Fail2Ban config
 ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================

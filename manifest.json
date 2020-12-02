@@ -2,26 +2,26 @@
   "name": "Shaarli",
   "id": "shaarli",
   "packaging_format": 1,
-  "requirements": {
-   "yunohost": ">= 3.8.1"
-  },
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
     "fr": "Clone de delicious, rapide, simple et sans base de données."
   },
-  "maintainer": {
-          "name": "Lapineige et rafi59",
-          "email": "rafi59_dev@srvmaison.fr.nf",
-          "url": ""
-  },
+  "version": "0.12.1~ynh1",
   "url": "https://github.com/shaarli/Shaarli",
   "license": "MIT",
-  "version": "0.12.0~ynh1",
+  "maintainer": {
+    "name": "Lapineige et rafi59",
+    "email": "rafi59_dev@srvmaison.fr.nf",
+    "url": ""
+  },
+  "requirements": {
+    "yunohost": ">= 3.8.1"
+  },
   "multi_instance": true,
   "services": [
         "nginx",
         "php7.0-fpm"
-    ],
+  ],
   "arguments": {
     "install" : [
     {
@@ -83,7 +83,7 @@
         "fr": "Si configuré en public, Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre Yunohost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Vos nouveaux liens seront publics par défaut, mais vous pourrez changer ça dans la page de configuration de Shaarli."
       },
       "default": false
-    }
+      }
     ]
   }
 }

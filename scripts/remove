@@ -16,16 +16,8 @@ ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get     --app=$app --key=domain)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..."
-
-# Remove metapackage and its dependencies
-ynh_remove_app_dependencies
 
 #=================================================
 # REMOVE APP MAIN DIR
@@ -57,7 +49,6 @@ ynh_remove_fpm_config
 ynh_script_progression --message="Removing logrotate configuration..."
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
-
 
 #=================================================
 # REMOVE FAIL2BAN CONFIGURATION
