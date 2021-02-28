@@ -6,7 +6,7 @@
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
     "fr": "Clone de delicious, rapide, simple et sans base de données."
   },
-  "version": "0.12.1~ynh1",
+  "version": "0.12.1~ynh2",
   "url": "https://github.com/shaarli/Shaarli",
   "license": "MIT",
   "maintainer": {

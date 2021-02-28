@@ -83,7 +83,7 @@ then
 	ynh_setup_source --dest_dir="$final_path"
 
 	cp -a "$tmpdir/data" "$final_path/"
-	cp -a "$tmpdir/tpl" "$final_path/"
+	cp -a -n "$tmpdir/tpl" "$final_path/" # copy without erasing existing templates (from official source)
 
 	# Remove the tmp directory securely
 	ynh_secure_remove --file="$tmpdir"
