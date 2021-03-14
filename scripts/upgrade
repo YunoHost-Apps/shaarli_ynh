@@ -65,7 +65,7 @@ ynh_abort_if_errors
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
+if [ "$upgrade_type" == "UPGRADE_APP" ] || [ "$upgrade_type" == "UPGRADE_FORCED" ] # we should do that during a force upgrade too (as it could lead to a version upgrade for instance)
 then
 	ynh_script_progression --message="Upgrading source files..."
 
@@ -83,7 +83,7 @@ then
 	ynh_setup_source --dest_dir="$final_path"
 
 	cp -a "$tmpdir/data" "$final_path/"
-	cp -a "$tmpdir/tpl" "$final_path/"
+	cp -a -n "$tmpdir/tpl" "$final_path/" # copy without erasing existing templates (from official source)
 
 	# Remove the tmp directory securely
 	ynh_secure_remove --file="$tmpdir"
