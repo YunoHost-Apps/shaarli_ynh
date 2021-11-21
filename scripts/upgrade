@@ -97,6 +97,11 @@ then
 	ynh_secure_remove --file="$tmpdir"
 fi
 
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chown -R $app:www-data "$final_path"
+
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
@@ -134,15 +139,6 @@ then
 fi
 
 ynh_use_logrotate --non-append
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression --message="Securing files and directories..."
-
-chown -R $app: $final_path
-chmod -R g+rX $final_path
-chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 
 #=================================================
 # UPGRADE FAIL2BAN

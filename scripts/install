@@ -72,6 +72,11 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chown -R $app:www-data "$final_path"
+
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
@@ -126,16 +131,6 @@ fi
 ynh_add_config --template="../conf/config.json.php" --destination="$final_path/data/config.json.php"
 
 #=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-# set proper permissions
-ynh_script_progression --message="Securing files and directories..."
-
-chown -R $app: $final_path
-chmod -R g+rX $final_path
-chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
-
-#=================================================
 # SETUP FAIL2BAN
 #=================================================
 ynh_script_progression --message="Configuring Fail2Ban..."
@@ -146,13 +141,11 @@ ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..."
+ynh_script_progression --message="Configuring permissions..."
 
 # Make app public if necessary
 if [ $is_public -eq 1 ]
 then
-	# Everyone can access the app.
-	# The "main" permission is automatically created before the install script.
 	ynh_permission_update --permission "main" --add "visitors"
 fi
 
