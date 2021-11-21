@@ -4,10 +4,18 @@
   "packaging_format": 1,
   "description": {
     "en": "The personal, minimalist, super-fast, no-database delicious clone",
-    "fr": "Clone de delicious, rapide, simple et sans base de données."
+    "fr": "Clone de delicious, rapide, simple et sans base de données"
   },
   "version": "0.12.1~ynh2",
   "url": "https://github.com/shaarli/Shaarli",
+  "upstream": {
+        "license": "free",
+        "website": "https://example.com",
+        "demo": "https://demo.shaarli.org/",
+        "admindoc": "https://yunohost.org/packaging_apps",
+        "userdoc": "https://yunohost.org/apps",
+        "code": "https://github.com/shaarli/Shaarli"
+    },
   "license": "MIT",
   "maintainer": {
     "name": "lapineige et rafi59",
@@ -15,51 +23,32 @@
     "url": ""
   },
   "requirements": {
-    "yunohost": ">= 3.8.1"
+    "yunohost": ">= 4.3.0"
   },
   "multi_instance": true,
   "services": [
         "nginx",
-        "php7.0-fpm"
+        "php7.3-fpm"
   ],
   "arguments": {
     "install" : [
     {
       "name": "domain",
-      "type": "domain",
-      "ask": {
-        "en": "Choose a domain for your Shaarli",
-        "fr": "Choisissez un domaine pour votre Shaarli"
-      },
-      "example": "domain.org"
+      "type": "domain"
     },
     {
       "name": "path",
       "type": "path",
-      "ask": {
-        "en": "Choose a path for your Shaarli",
-        "fr": "Choisissez un chemin pour votre Shaarli"
-      },
       "example": "/shaarli",
       "default": "/shaarli"
     },
     {
       "name": "admin",
-      "type": "user",
-      "ask": {
-        "en": "Choose the admin user",
-        "fr": "Choisissez l’administrateur"
-      },
-      "example": "johndoe"
+      "type": "user"
     },
     {
       "name": "password",
-      "type": "password",
-      "ask": {
-        "en": "Choose the admin password",
-        "fr": "Choisissez le mot de passe de l’administrateur"
-      },
-      "example": "johndoe"
+      "type": "password"
     },
     {
       "name": "title",
@@ -74,10 +63,6 @@
     {
       "name": "is_public",
       "type": "boolean",
-      "ask": {
-        "en": "Is it a public Shaarli site?",
-        "fr": "Est-ce un site Shaarli public ?"
-      },
       "help": {
         "en": "If set as public, Shaarli will be visible to anyone, including non-Yunohost users. However only Shaarli users can add bookmarks. Your links will be public by default, but you can change that in Shaarli's configuration page.",
         "fr": "Si configuré en public, Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre Yunohost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Vos nouveaux liens seront publics par défaut, mais vous pourrez changer ça dans la page de configuration de Shaarli."
