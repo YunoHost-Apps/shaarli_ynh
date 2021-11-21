@@ -47,9 +47,7 @@ During the installation app will prompt you to install itself as public or priva
 After the installation is complete, go to the domain where the Shaarli is installed and create your account. After the creation of the account the registration will be locked.
 ## Documentation and resources
 
-* Official app website: https://example.com
-* Official user documentation: https://yunohost.org/apps
-* Official admin documentation: https://yunohost.org/packaging_apps
+* Official admin documentation: https://shaarli.readthedocs.io/en/master/
 * Upstream app code repository: https://github.com/shaarli/Shaarli
 * YunoHost documentation for this app: https://yunohost.org/app_shaarli
 * Report a bug: https://github.com/YunoHost-Apps/shaarli_ynh/issues
