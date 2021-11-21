@@ -51,13 +51,11 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
-if [ -n "$is_public" ]; then
-	# Delete is_public key. It is now handled by the permissions system
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
 	ynh_app_setting_delete --app=$app --key=is_public
-	# Delete legacy permission settings
-	ynh_app_setting_delete --app=$app --key=unprotected_uris
-	ynh_app_setting_delete --app=$app --key=protected_uris
-	ynh_app_setting_delete --app=$app --key=skipped_uris
 fi
 
 #=================================================
