@@ -9,11 +9,9 @@
   "version": "0.12.1~ynh2",
   "url": "https://github.com/shaarli/Shaarli",
   "upstream": {
-        "license": "free",
-        "website": "https://example.com",
+        "license": "MIT",
         "demo": "https://demo.shaarli.org/",
-        "admindoc": "https://yunohost.org/packaging_apps",
-        "userdoc": "https://yunohost.org/apps",
+        "admindoc": "https://shaarli.readthedocs.io/en/master/",
         "code": "https://github.com/shaarli/Shaarli"
     },
   "license": "MIT",
