@@ -47,7 +47,6 @@ ynh_remove_fpm_config
 # REMOVE LOGROTATE CONFIGURATION
 #=================================================
 ynh_script_progression --message="Removing logrotate configuration..."
-
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
 
