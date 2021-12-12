@@ -131,16 +131,7 @@ fi
 
 # Installing the config file and replace the placeholders
 ynh_add_config --template="../conf/config.json.php" --destination="$final_path/data/config.json.php"
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-# set proper permissions
-ynh_script_progression --message="Securing files and directories..."
-
-chown -R $app: $final_path
-chmod -R g+rX $final_path
-chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chmod 700 "$final_path/data/config.json.php"
 
 #=================================================
 # SETUP FAIL2BAN

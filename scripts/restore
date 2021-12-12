@@ -65,6 +65,7 @@ chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
 chmod -R u+rwX $final_path/{cache/,data/,pagecache/,tmp/}
 chown -R $app:www-data "$final_path"
+chmod 700 "$final_path/data/config.json.php"
 
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION
