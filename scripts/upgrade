@@ -135,6 +135,7 @@ then
     ynh_secure_remove "$final_path/data/log.txt"
     touch "$final_path/data/log.txt"
 fi
+chown $app:www-data "$final_path/data/log.txt"
 
 ynh_use_logrotate --non-append
 

@@ -103,6 +103,7 @@ ynh_script_progression --message="Configuring log rotation..."
 # Use logrotate to manage application logfile(s)
 touch "$final_path/data/log.txt"
 ynh_use_logrotate "$final_path/data/log.txt"
+chown $app:www-data "$final_path/data/log.txt"
 
 #=================================================
 # MODIFY A CONFIG FILE
