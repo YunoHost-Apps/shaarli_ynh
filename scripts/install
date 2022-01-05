@@ -74,10 +74,10 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
-#chmod 750 "$final_path"
-#chmod -R o-rwx "$final_path"
-#chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
-#chown -R $app:www-data "$final_path"
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chmod -R u+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chown -R $app:www-data "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -103,6 +103,7 @@ ynh_script_progression --message="Configuring log rotation..."
 # Use logrotate to manage application logfile(s)
 touch "$final_path/data/log.txt"
 ynh_use_logrotate "$final_path/data/log.txt"
+chown $app:www-data "$final_path/data/log.txt"
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -131,16 +132,7 @@ fi
 
 # Installing the config file and replace the placeholders
 ynh_add_config --template="../conf/config.json.php" --destination="$final_path/data/config.json.php"
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-# set proper permissions
-ynh_script_progression --message="Securing files and directories..."
-
-chown -R $app: $final_path
-chmod -R g+rX $final_path
-chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chmod 700 "$final_path/data/config.json.php"
 
 #=================================================
 # SETUP FAIL2BAN

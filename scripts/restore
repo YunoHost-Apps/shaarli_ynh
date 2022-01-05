@@ -61,14 +61,11 @@ ynh_script_progression --message="Restoring the app main directory..."
 
 ynh_restore_file --origin_path="$final_path"
 
-#=================================================
-# RESTORE USER RIGHTS
-#=================================================
-ynh_script_progression --message="Restoring user rights..."
-
-chown -R $app: $final_path
-chmod -R g+rX $final_path
-chmod -R g+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chmod -R u+rwX $final_path/{cache/,data/,pagecache/,tmp/}
+chown -R $app:www-data "$final_path"
+chmod 700 "$final_path/data/config.json.php"
 
 #=================================================
 # RESTORE THE PHP-FPM CONFIGURATION
