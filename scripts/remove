@@ -20,6 +20,16 @@ domain=$(ynh_app_setting_get --app=$app --key=domain)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
+# STANDARD REMOVE
+#=================================================
+# REMOVE LOGROTATE CONFIGURATION
+#=================================================
+ynh_script_progression --message="Removing logrotate configuration..."
+
+# Remove the app-specific logrotate config
+ynh_remove_logrotate
+
+#=================================================
 # REMOVE APP MAIN DIR
 #=================================================
 ynh_script_progression --message="Removing app main directory..."
@@ -44,19 +54,11 @@ ynh_script_progression --message="Removing PHP-FPM configuration..."
 ynh_remove_fpm_config
 
 #=================================================
-# REMOVE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing logrotate configuration..."
-
-# Remove the app-specific logrotate config
-ynh_remove_logrotate
-
-#=================================================
 # REMOVE FAIL2BAN CONFIGURATION
 #=================================================
 ynh_script_progression --message="Removing Fail2Ban configuration..."
 
-# Remove the dedicated fail2ban config
+# Remove the dedicated Fail2Ban config
 ynh_remove_fail2ban_config
 
 #=================================================
