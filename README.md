@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # Shaarli for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/shaarli.svg)](https://dash.yunohost.org/appci/app/shaarli) ![](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/shaarli.svg)](https://dash.yunohost.org/appci/app/shaarli) ![Working status](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)  
 [![Install Shaarli with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -30,13 +30,13 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 - feed other blogs, aggregators, social networks...
 
 
-**Shipped version:** 0.12.1~ynh3
+**Shipped version:** 0.12.1~ynh4
 
 **Demo:** https://demo.shaarli.org/
 
 ## Screenshots
 
-![](./doc/screenshots/27wYsbC.png)
+![Screenshot of Shaarli](./doc/screenshots/27wYsbC.png)
 
 ## Disclaimers / important information
 
@@ -47,20 +47,21 @@ During the installation app will prompt you to install itself as public or priva
 After the installation is complete, go to the domain where the Shaarli is installed and create your account. After the creation of the account the registration will be locked.
 ## Documentation and resources
 
-* Official admin documentation: https://shaarli.readthedocs.io/en/master/
-* Upstream app code repository: https://github.com/shaarli/Shaarli
-* YunoHost documentation for this app: https://yunohost.org/app_shaarli
-* Report a bug: https://github.com/YunoHost-Apps/shaarli_ynh/issues
+* Official admin documentation: <https://shaarli.readthedocs.io/en/master/>
+* Upstream app code repository: <https://github.com/shaarli/Shaarli>
+* YunoHost documentation for this app: <https://yunohost.org/app_shaarli>
+* Report a bug: <https://github.com/YunoHost-Apps/shaarli_ynh/issues>
 
 ## Developer info
 
 Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/shaarli_ynh/tree/testing).
 
 To try the testing branch, please proceed like that.
-```
+
+``` bash
 sudo yunohost app install https://github.com/YunoHost-Apps/shaarli_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade shaarli -u https://github.com/YunoHost-Apps/shaarli_ynh/tree/testing --debug
 ```
 
-**More info regarding app packaging:** https://yunohost.org/packaging_apps
+**More info regarding app packaging:** <https://yunohost.org/packaging_apps>
