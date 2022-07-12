@@ -16,9 +16,7 @@
     },
     "license": "MIT",
     "maintainer": {
-        "name": "lapineige et rafi59",
-        "email": "rafi59_dev@srvmaison.fr.nf",
-        "url": ""
+        "name": "lapineige"
     },
     "requirements": {
         "yunohost": ">= 4.3.0"
