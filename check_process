@@ -1,10 +1,10 @@
-;; Test complet sans multisite
+;; Test complet
 	; Manifest
 		domain="domain.tld"
 		path="/path"
 		is_public=1
 		admin="john"
-		password="pass"
+		password="1Strong-Password"
 		title="Shaarli"
 	; Checks
 		pkg_linter=1
@@ -14,8 +14,11 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
+		# 0.12.1~ynh3
+		upgrade=1	from_commit=f61a2392a4df80d92a5f2042d1b503958f1f4fdf
 		backup_restore=1
 		multi_instance=1
+		port_already_use=0
 		change_url=1
 ;;; Options
 Email=
