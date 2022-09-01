@@ -110,7 +110,7 @@ timezone=$(cat /etc/timezone)
 salt=$(php$phpversion -r 'echo sha1(uniqid("", true) ."_". mt_rand());')
 
 # Generate the hash with the password
-hash=$(php$phpversion -r "echo sha1('${password}'.'${admin}'.'${salt}');")
+hash=$(echo -n "${password}${admin}${salt}" | sha1sum | awk '{print $1}')
 
 # Generate the API secret
 secret=$(php${YNH_PHP_VERSION} -r "echo str_shuffle(substr(hash_hmac('sha512', uniqid('${salt}'), '${admin}'), 10, 12));")
