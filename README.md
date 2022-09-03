@@ -32,6 +32,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 
 **Shipped version:** 0.12.1~ynh4
 
+
 **Demo:** https://demo.shaarli.org/
 
 ## Screenshots
