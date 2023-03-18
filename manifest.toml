@@ -14,7 +14,6 @@ license = "MIT"
 demo = "https://demo.shaarli.org/"
 admindoc = "https://shaarli.readthedocs.io/en/master/"
 code = "https://github.com/shaarli/Shaarli"
-website = "https://github.com/shaarli/Shaarli"
 
 [integration]
 yunohost = ">= 11.1.15"
