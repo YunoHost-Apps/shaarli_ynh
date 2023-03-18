@@ -39,15 +39,9 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 
 ![Capture d’écran de Shaarli](./doc/screenshots/27wYsbC.png)
 
-## Avertissements / informations importantes
-
-## Configuration
-
-During the installation app will prompt you to install itself as public or private, if you choose public then anyone (not just YunoHost users) would be able to access your Shaarli instance.
-
-After the installation is complete, go to the domain where the Shaarli is installed and create your account. After the creation of the account the registration will be locked.
 ## Documentations et ressources
 
+* Site officiel de l’app : <https://github.com/shaarli/Shaarli>
 * Documentation officielle de l’admin : <https://shaarli.readthedocs.io/en/master/>
 * Dépôt de code officiel de l’app : <https://github.com/shaarli/Shaarli>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_shaarli>
