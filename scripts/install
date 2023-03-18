@@ -10,71 +10,13 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-#REMOVEME? ynh_abort_if_errors
-
-#=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-#REMOVEME? domain=$YNH_APP_ARG_DOMAIN
-#REMOVEME? path=$YNH_APP_ARG_PATH
-#REMOVEME? is_public=$YNH_APP_ARG_IS_PUBLIC
-#REMOVEME? admin=$YNH_APP_ARG_ADMIN
-#REMOVEME? password=$YNH_APP_ARG_PASSWORD
-#REMOVEME? title=$YNH_APP_ARG_TITLE
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-
-#=================================================
-# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
-#=================================================
-#REMOVEME? ynh_script_progression --message="Validating installation parameters..."
-
-#REMOVEME? install_dir=/var/www/$app
-#REMOVEME? test ! -e "$install_dir" || ynh_die --message="This path already contains a folder"
-
-# Register (book) web path
-#REMOVEME? ynh_webpath_register --app=$app --domain=$domain --path=$path
-
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-#REMOVEME? ynh_script_progression --message="Storing installation settings..."
-
-#REMOVEME? ynh_app_setting_set --app=$app --key=domain --value=$domain
-#REMOVEME? ynh_app_setting_set --app=$app --key=path --value=$path
-
-#=================================================
-# STANDARD MODIFICATIONS
-#=================================================
-# INSTALL DEPENDENCIES
-#=================================================
-#REMOVEME? ynh_script_progression --message="Installing dependencies..."
-
-#REMOVEME? ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-#REMOVEME? ynh_script_progression --message="Configuring system user..."
-
-# Create a system user
-#REMOVEME? ynh_system_user_create --username=$app --home_dir="$install_dir"
-
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..."
 
-#REMOVEME? ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
-chmod 750 "$install_dir"
 chmod -R o-rwx "$install_dir"
 chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
@@ -86,7 +28,6 @@ ynh_script_progression --message="Configuring PHP-FPM..."
 
 # Create a dedicated PHP-FPM config
 ynh_add_fpm_config --usage=low --footprint=low
-#REMOVEME? phpversion=$(ynh_app_setting_get --app=$app --key=phpversion)
 
 #=================================================
 # NGINX CONFIGURATION
@@ -116,7 +57,7 @@ hash=$(echo -n "${password}${admin}${salt}" | sha1sum | awk '{print $1}')
 secret=$(php${YNH_PHP_VERSION} -r "echo str_shuffle(substr(hash_hmac('sha512', uniqid('${salt}'), '${admin}'), 10, 12));")
 
 # Set default_private_links. By default, make them public if the app is public.
-#REMOVEME? if [ $is_public -eq 1 ]
+if [ $is_public -eq 1 ]
 then
         default_private_links=false
 else
@@ -146,26 +87,6 @@ ynh_script_progression --message="Configuring Fail2Ban..."
 
 # Create a dedicated Fail2Ban config
 ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-#REMOVEME? ynh_script_progression --message="Configuring permissions..."
-
-# Make app public if necessary
-#REMOVEME? if [ $is_public -eq 1 ]
-then
-	# Everyone can access the app.
-	# The "main" permission is automatically created before the install script.
-#REMOVEME? 	ynh_permission_update --permission="main" --add="visitors"
-fi
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-#REMOVEME? ynh_script_progression --message="Reloading NGINX web server..."
-
-#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

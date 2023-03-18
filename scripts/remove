@@ -10,16 +10,6 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-#REMOVEME? ynh_script_progression --message="Loading installation settings..."
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-
-#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
-#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
-
-#=================================================
 # STANDARD REMOVE
 #=================================================
 # REMOVE LOGROTATE CONFIGURATION
@@ -28,14 +18,6 @@ ynh_script_progression --message="Removing logrotate configuration..."
 
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
-
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-#REMOVEME? ynh_script_progression --message="Removing app main directory..."
-
-# Remove the app directory securely
-#REMOVEME? ynh_secure_remove --file="$install_dir"
 
 #=================================================
 # REMOVE NGINX CONFIGURATION
@@ -60,16 +42,6 @@ ynh_script_progression --message="Removing Fail2Ban configuration..."
 
 # Remove the dedicated Fail2Ban config
 ynh_remove_fail2ban_config
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# REMOVE DEDICATED USER
-#=================================================
-#REMOVEME? ynh_script_progression --message="Removing the dedicated system user..."
-
-# Delete a system user
-#REMOVEME? ynh_system_user_delete --username=$app
 
 #=================================================
 # END OF SCRIPT
