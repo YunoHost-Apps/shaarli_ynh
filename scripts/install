@@ -57,7 +57,7 @@ hash=$(echo -n "${password}${admin}${salt}" | sha1sum | awk '{print $1}')
 secret=$(php${YNH_PHP_VERSION} -r "echo str_shuffle(substr(hash_hmac('sha512', uniqid('${salt}'), '${admin}'), 10, 12));")
 
 # Set default_private_links. By default, make them public if the app is public.
-if [ $is_public -eq 1 ]
+if ynh_permission_has_user --permission=main --user=visitors
 then
         default_private_links=false
 else
