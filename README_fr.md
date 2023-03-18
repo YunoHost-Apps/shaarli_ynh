@@ -5,15 +5,16 @@ It shall NOT be edited by hand.
 
 # Shaarli pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/shaarli.svg)](https://dash.yunohost.org/appci/app/shaarli) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/shaarli.svg)](https://dash.yunohost.org/appci/app/shaarli) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
+
 [![Installer Shaarli avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer Shaarli rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer Shaarli rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 Shaarli is a minimalist bookmark manager and link sharing service that you can install on your own server. It is designed to be personal (single-user), fast and handy.
 
@@ -30,14 +31,13 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 - feed other blogs, aggregators, social networks...
 
 
-**Version incluse :** 0.12.1~ynh5
-
+**Version incluse :** 0.12.2~ynh1
 
 **Démo :** https://demo.shaarli.org/
 
-## Captures d'écran
+## Captures d’écran
 
-![Capture d'écran de Shaarli](./doc/screenshots/27wYsbC.png)
+![Capture d’écran de Shaarli](./doc/screenshots/27wYsbC.png)
 
 ## Avertissements / informations importantes
 
@@ -48,8 +48,8 @@ During the installation app will prompt you to install itself as public or priva
 After the installation is complete, go to the domain where the Shaarli is installed and create your account. After the creation of the account the registration will be locked.
 ## Documentations et ressources
 
-* Documentation officielle de l'admin : <https://shaarli.readthedocs.io/en/master/>
-* Dépôt de code officiel de l'app : <https://github.com/shaarli/Shaarli>
+* Documentation officielle de l’admin : <https://shaarli.readthedocs.io/en/master/>
+* Dépôt de code officiel de l’app : <https://github.com/shaarli/Shaarli>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_shaarli>
 * Signaler un bug : <https://github.com/YunoHost-Apps/shaarli_ynh/issues>
 
@@ -65,4 +65,4 @@ ou
 sudo yunohost app upgrade shaarli -u https://github.com/YunoHost-Apps/shaarli_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
