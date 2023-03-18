@@ -1,6 +1,0 @@
-SOURCE_URL=https://github.com/shaarli/Shaarli/releases/download/v0.12.2/shaarli-v0.12.2-full.tar.gz
-SOURCE_SUM=7c2077b1de493012a77d8e9bd926715f1576f5520eff86a239bc96d2df80fd1d
-SOURCE_SUM_PRG=sha256sum
-SOURCE_FORMAT=tar.gz
-SOURCE_IN_SUBDIR=true
-SOURCE_EXTRACT=true
