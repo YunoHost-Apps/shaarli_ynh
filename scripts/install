@@ -77,7 +77,7 @@ ynh_script_progression --message="Configuring log rotation..."
 
 # Use logrotate to manage application logfile(s)
 touch "$install_dir/data/log.txt"
-ynh_use_logrotate "$install_dir/data/log.txt"
+ynh_use_logrotate "$install_dir/data/log.txt" --specific_user=$app
 chown $app:www-data "$install_dir/data/log.txt"
 
 #=================================================
