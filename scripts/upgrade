@@ -76,11 +76,11 @@ ynh_script_progression --message="Upgrading logrotate configuration..."
 if [ -d "$install_dir/data/log.txt" ]
 then
 	ynh_secure_remove "$install_dir/data/log.txt"
-    touch "$install_dir/data/log.txt"
+	touch "$install_dir/data/log.txt"
 fi
 chown $app:www-data "$install_dir/data/log.txt"
 
-ynh_use_logrotate --non-append
+ynh_use_logrotate --non-append --specific_user=$app
 
 #=================================================
 # UPGRADE FAIL2BAN
