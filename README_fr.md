@@ -37,7 +37,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 
 ## Captures d’écran
 
-![Capture d’écran de Shaarli](./doc/screenshots/27wYsbC.png)
+![Capture d'écran de Shaarli](./doc/screenshots/27wYsbC.png)
 
 ## Documentations et ressources
 
