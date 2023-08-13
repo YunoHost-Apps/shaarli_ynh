@@ -30,9 +30,6 @@ then
 	cp -a "$install_dir/data" "$tmpdir/data"
 	cp -a "$install_dir/tpl" "$tmpdir/tpl"
 
-	# Remove the app directory securely
-#REMOVEME? 	ynh_secure_remove "$install_dir"
-
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source --dest_dir="$install_dir"
 
