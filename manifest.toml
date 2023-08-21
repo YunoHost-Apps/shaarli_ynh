@@ -1,0 +1,67 @@
+packaging_format = 2
+
+id = "shaarli"
+name = "Shaarli"
+description.en = "The personal, minimalist, super-fast, no-database delicious clone"
+description.fr = "Clone de delicious, rapide, simple et sans base de données"
+
+version = "0.12.2~ynh1"
+
+maintainers = ["Lapineige"]
+
+[upstream]
+license = "MIT"
+demo = "https://demo.shaarli.org/"
+admindoc = "https://shaarli.readthedocs.io/en/master/"
+code = "https://github.com/shaarli/Shaarli"
+
+[integration]
+yunohost = ">= 11.1.15"
+architectures = "all"
+multi_instance = true
+ldap = false
+sso = false
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.path]
+    type = "path"
+    default = "/shaarli"
+
+    [install.init_main_permission]
+    help.en = "If set as public, Shaarli will be visible to anyone, including non-Yunohost users. However only Shaarli users can add bookmarks. Your links will be public by default, but you can change that in Shaarli's configuration page."
+    help.fr = "Si configuré en public, Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre Yunohost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Vos nouveaux liens seront publics par défaut, mais vous pourrez changer ça dans la page de configuration de Shaarli."
+    type = "group"
+    default = false
+
+    [install.admin]
+    type = "user"
+
+    [install.password]
+    type = "password"
+
+    [install.title]
+    ask.en = "Choose a title for your Shaarli instance"
+    ask.fr = "Choisissez un titre pour votre instance Shaarli"
+    type = "string"
+    example = "Shaarli"
+    default = "Shaarli"
+
+[resources]
+        [resources.sources.main]
+        url = "https://github.com/shaarli/Shaarli/releases/download/v0.12.2/shaarli-v0.12.2-full.tar.gz"
+        sha256 = "7c2077b1de493012a77d8e9bd926715f1576f5520eff86a239bc96d2df80fd1d"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"
+
+    [resources.apt]
+    packages = "php8.0-cli php8.0-gettext php8.0-curl php8.0-intl php8.0-gd php8.0-mbstring"

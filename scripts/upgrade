@@ -10,62 +10,10 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..."
-
-app=$YNH_APP_INSTANCE_NAME
-
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
 # CHECK VERSION
 #=================================================
-ynh_script_progression --message="Checking version..."
 
 upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..."
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-ynh_script_progression --message="Ensuring downward compatibility..."
-
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/var/www/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-fi
-
-# Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-	ynh_legacy_permissions_delete_all
-
-	ynh_app_setting_delete --app=$app --key=is_public
-fi
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..."
-
-# Create a dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -79,34 +27,23 @@ then
 	tmpdir="$(mktemp -d)"
 
 	# Backup the config file in the temp dir
-	cp -a "$final_path/data" "$tmpdir/data"
-	cp -a "$final_path/tpl" "$tmpdir/tpl"
-
-	# Remove the app directory securely
-	ynh_secure_remove "$final_path"
+	cp -a "$install_dir/data" "$tmpdir/data"
+	cp -a "$install_dir/tpl" "$tmpdir/tpl"
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
+	ynh_setup_source --dest_dir="$install_dir"
 
-	cp -a "$tmpdir/data" "$final_path/"
-	cp -a -n "$tmpdir/tpl" "$final_path/" # copy without erasing existing templates (from official source)
+	cp -a "$tmpdir/data" "$install_dir/"
+	cp -a -n "$tmpdir/tpl" "$install_dir/" # copy without erasing existing templates (from official source)
 
 	# Remove the tmp directory securely
 	ynh_secure_remove --file="$tmpdir"
 fi
 
-chmod 750 "$final_path"
-chmod -R o-rwx "$final_path"
-chmod -R u+rwX $final_path/{cache/,data/,pagecache/,tmp/}
-chown -R $app:www-data "$final_path"
-chmod 700 "$final_path/data/config.json.php"
-
-#=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..."
-
-ynh_install_app_dependencies $pkg_dependencies
+chmod -R o-rwx "$install_dir"
+chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
+chown -R $app:www-data "$install_dir"
+chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # PHP-FPM CONFIGURATION
@@ -133,14 +70,14 @@ ynh_script_progression --message="Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
 # Temporary fix for .txt log file and ynh_use_logrotate
-if [ -d "$final_path/data/log.txt" ]
+if [ -d "$install_dir/data/log.txt" ]
 then
-    ynh_secure_remove "$final_path/data/log.txt"
-    touch "$final_path/data/log.txt"
+	ynh_secure_remove "$install_dir/data/log.txt"
+	touch "$install_dir/data/log.txt"
 fi
-chown $app:www-data "$final_path/data/log.txt"
+chown $app:www-data "$install_dir/data/log.txt"
 
-ynh_use_logrotate --non-append
+ynh_use_logrotate --non-append --specific_user=$app
 
 #=================================================
 # UPGRADE FAIL2BAN
@@ -148,14 +85,7 @@ ynh_use_logrotate --non-append
 ynh_script_progression --message="Reconfiguring Fail2Ban..."
 
 # Create a dedicated Fail2Ban config
-ynh_add_fail2ban_config --logpath="$final_path/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..."
-
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
 # END OF SCRIPT
