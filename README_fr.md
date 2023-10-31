@@ -43,7 +43,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 
 * Documentation officielle de l’admin : <https://shaarli.readthedocs.io/en/master/>
 * Dépôt de code officiel de l’app : <https://github.com/shaarli/Shaarli>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_shaarli>
+* YunoHost Store: <https://apps.yunohost.org/app/shaarli>
 * Signaler un bug : <https://github.com/YunoHost-Apps/shaarli_ynh/issues>
 
 ## Informations pour les développeurs
