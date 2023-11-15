@@ -16,11 +16,14 @@ admindoc = "https://shaarli.readthedocs.io/en/master/"
 code = "https://github.com/shaarli/Shaarli"
 
 [integration]
-yunohost = ">= 11.1.15"
+yunohost = ">= 11.2"
 architectures = "all"
 multi_instance = true
+
 ldap = false
+
 sso = false
+
 disk = "50M"
 ram.build = "50M"
 ram.runtime = "50M"
@@ -33,10 +36,10 @@ ram.runtime = "50M"
     default = "/shaarli"
 
     [install.init_main_permission]
-    help.en = "If set as public, Shaarli will be visible to anyone, including non-Yunohost users. However only Shaarli users can add bookmarks. Your links will be public by default, but you can change that in Shaarli's configuration page."
-    help.fr = "Si configuré en public, Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre Yunohost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Vos nouveaux liens seront publics par défaut, mais vous pourrez changer ça dans la page de configuration de Shaarli."
+    help.en = "If set as 'visitors', Shaarli will be visible to anyone, including non-YunoHost users. However only Shaarli users can add bookmarks. Your links will be public by default, but you can change that in Shaarli's configuration page."
+    help.fr = "Si configuré en 'visiteurs', Shaarli sera visible par tout le monde, y compris des personnes sans compte sur votre YunoHost. Cependant seules les personnes avec un compte Shaarli pourrons ajouter des marques-pages. Vos nouveaux liens seront publics par défaut, mais vous pourrez changer ça dans la page de configuration de Shaarli."
     type = "group"
-    default = false
+    default = "visitors"
 
     [install.admin]
     type = "user"
@@ -55,6 +58,7 @@ ram.runtime = "50M"
         [resources.sources.main]
         url = "https://github.com/shaarli/Shaarli/releases/download/v0.12.2/shaarli-v0.12.2-full.tar.gz"
         sha256 = "7c2077b1de493012a77d8e9bd926715f1576f5520eff86a239bc96d2df80fd1d"
+        autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
 
@@ -64,4 +68,4 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "php8.0-cli php8.0-gettext php8.0-curl php8.0-intl php8.0-gd php8.0-mbstring"
+    packages = "php8.2-cli, php8.2-gettext, php8.2-curl, php8.2-intl, php8.2-gd, php8.2-mbstring, php8.2-xml, php8.2-ldap"
