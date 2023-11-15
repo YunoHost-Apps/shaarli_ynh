@@ -51,7 +51,7 @@ chmod 700 "$install_dir/data/config.json.php"
 ynh_script_progression --message="Upgrading PHP-FPM configuration..."
 
 # Create a dedicated PHP-FPM config
-ynh_add_fpm_config --usage=low --footprint=low
+ynh_add_fpm_config
 
 #=================================================
 # NGINX CONFIGURATION
