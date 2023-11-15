@@ -24,26 +24,26 @@ then
 	ynh_script_progression --message="Upgrading source files..." --weight=1
 
 	# Create a temporary directory
-	tmpdir="$(mktemp -d)"
+	#tmpdir="$(mktemp -d)"
 
 	# Backup the config file in the temp dir
-	cp -a "$install_dir/data" "$tmpdir/data"
-	cp -a "$install_dir/tpl" "$tmpdir/tpl"
+	#cp -a "$install_dir/data" "$tmpdir/data"
+	#cp -a "$install_dir/tpl" "$tmpdir/tpl"
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir"
+	ynh_setup_source --dest_dir="$install_dir" --keep="data tpl"
 
-	cp -a "$tmpdir/data" "$install_dir/"
-	cp -a -n "$tmpdir/tpl" "$install_dir/" # copy without erasing existing templates (from official source)
+	#cp -a "$tmpdir/data" "$install_dir/"
+	#cp -a -n "$tmpdir/tpl" "$install_dir/" # copy without erasing existing templates (from official source)
 
 	# Remove the tmp directory securely
-	ynh_secure_remove --file="$tmpdir"
+	#ynh_secure_remove --file="$tmpdir"
 fi
 
 chmod -R o-rwx "$install_dir"
 chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
-chmod 700 "$install_dir/data/config.json.php"
+#chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
