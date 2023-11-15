@@ -2,8 +2,8 @@ packaging_format = 2
 
 id = "shaarli"
 name = "Shaarli"
-description.en = "The personal, minimalist, super-fast, no-database delicious clone"
-description.fr = "Clone de delicious, rapide, simple et sans base de données"
+description.en = "Save, sort, synchronize and share web addresses"
+description.fr = "Sauvegarder, trier, synchroniser et partager des adresses web"
 
 version = "0.12.2~ynh1"
 
