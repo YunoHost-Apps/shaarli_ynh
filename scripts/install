@@ -18,7 +18,7 @@ ynh_script_progression --message="Setting up source files..." --weight=1
 ynh_setup_source --dest_dir="$install_dir"
 
 chmod -R o-rwx "$install_dir"
-chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
+chmod -R u+rwX $install_dir/{cache/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
 
 #=================================================
@@ -33,12 +33,12 @@ ynh_add_fpm_config
 ynh_add_nginx_config
 
 # Use logrotate to manage application logfile(s)
-touch "$install_dir/data/log.txt"
-ynh_use_logrotate "$install_dir/data/log.txt" --specific_user=$app
-chown $app:www-data "$install_dir/data/log.txt"
+touch "$data_dir/log.txt"
+ynh_use_logrotate "$data_dir/log.txt" --specific_user=$app
+chown $app:www-data "$data_dir/log.txt"
 
 # Create a dedicated Fail2Ban config
-ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
+ynh_add_fail2ban_config --logpath="$data_dir/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
 # SPECIFIC SETUP
@@ -68,8 +68,8 @@ else
 fi
 
 # Installing the config file and replace the placeholders
-ynh_add_config --template="../conf/config.json.php" --destination="$install_dir/data/config.json.php"
-chmod 700 "$install_dir/data/config.json.php"
+ynh_add_config --template="config.json.php" --destination="$data_dir/config.json.php"
+chmod 700 "$data_dir/config.json.php"
 
 #=================================================
 # END OF SCRIPT

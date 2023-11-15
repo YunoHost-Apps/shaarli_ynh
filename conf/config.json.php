@@ -1,14 +1,14 @@
 <?php /*
 {
     "resource": {
-        "data_dir": "data",
-        "config": "data\/config.php",
-        "datastore": "data\/datastore.php",
-        "ban_file": "data\/ipbans.php",
-        "updates": "data\/updates.txt",
-        "log": "data\/log.txt",
-        "update_check": "data\/lastupdatecheck.txt",
-        "history": "data\/history.php",
+        "data_dir": "__DATA_DIR__",
+        "config": "__DATA_DIR__\/config.php",
+        "datastore": "__DATA_DIR__\/datastore.php",
+        "ban_file": "__DATA_DIR__\/ipbans.php",
+        "updates": "__DATA_DIR__\/updates.txt",
+        "log": "__DATA_DIR__\/log.txt",
+        "update_check": "__DATA_DIR__\/lastupdatecheck.txt",
+        "history": "__DATA_DIR__\/history.php",
         "raintpl_tpl": "tpl\/",
         "theme": "default",
         "raintpl_tmp": "tmp\/",
@@ -30,7 +30,9 @@
         "header_link": "?",
         "links_per_page": 20,
         "enabled_plugins": [
-            "qrcode"
+            "qrcode",
+            "markdown",
+            "wallabag"
         ],
         "default_note_title": "Note: ",
         "retrieve_description": false,

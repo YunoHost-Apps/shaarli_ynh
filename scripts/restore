@@ -18,9 +18,8 @@ ynh_script_progression --message="Restoring the app main directory..." --weight=
 ynh_restore_file --origin_path="$install_dir"
 
 chmod -R o-rwx "$install_dir"
-chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
+chmod -R u+rwX $install_dir/{cache/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
-chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS

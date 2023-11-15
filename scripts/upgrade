@@ -23,27 +23,19 @@ if [ "$upgrade_type" == "UPGRADE_APP" ] || [ "$upgrade_type" == "UPGRADE_FORCED"
 then
 	ynh_script_progression --message="Upgrading source files..." --weight=1
 
-	# Create a temporary directory
-	tmpdir="$(mktemp -d)"
+	if [ ! -d "$data_dir" ]; then
+    	ynh_print_warn "Migrating data directory to $data_dir..."
 
-	# Backup the config file in the temp dir
-	cp -a "$install_dir/data" "$tmpdir/data"
-	cp -a "$install_dir/tpl" "$tmpdir/tpl"
+		mv "$install_dir/data" "$data_dir"
+	fi
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir"
-
-	cp -a "$tmpdir/data" "$install_dir/"
-	cp -a -n "$tmpdir/tpl" "$install_dir/" # copy without erasing existing templates (from official source)
-
-	# Remove the tmp directory securely
-	ynh_secure_remove --file="$tmpdir"
+	ynh_setup_source --dest_dir="$install_dir" --keep = "tpl"
 fi
 
 chmod -R o-rwx "$install_dir"
-chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
+chmod -R u+rwX $install_dir/{cache/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
-chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
@@ -58,17 +50,17 @@ ynh_add_nginx_config
 
 # Use logrotate to manage app-specific logfile(s)
 # Temporary fix for .txt log file and ynh_use_logrotate
-if [ -d "$install_dir/data/log.txt" ]
+if [ -d "$data_dir/log.txt" ]
 then
-	ynh_secure_remove "$install_dir/data/log.txt"
-	touch "$install_dir/data/log.txt"
+	ynh_secure_remove "$data_dir/log.txt"
+	touch "$data_dir/log.txt"
 fi
-chown $app:www-data "$install_dir/data/log.txt"
+chown $app:www-data "$data_dir/log.txt"
 
 ynh_use_logrotate --non-append --specific_user=$app
 
 # Create a dedicated Fail2Ban config
-ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
+ynh_add_fail2ban_config --logpath="$data_dir/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
 # END OF SCRIPT
