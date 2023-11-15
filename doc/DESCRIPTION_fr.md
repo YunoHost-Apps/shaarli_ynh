@@ -1,13 +1,13 @@
-Shaarli is a minimalist bookmark manager and link sharing service that you can install on your own server. It is designed to be personal (single-user), fast and handy.
+Shaarli est un gestionnaire de favoris minimaliste et un service de partage de liens que vous pouvez installer sur votre propre serveur. Il est conçu pour être personnel (mono-utilisateur), rapide et pratique.
 
-### Features
+### Caractéristiques
 
-- share, comment and save interesting links
-- bookmark useful/frequent links and share them between computers
-- a minimal blog/microblog/writing platform
-- a read-it-later/todo list
-- a notepad to draft and save articles/posts/ideas
-- a knowledge base to keep notes, documentation and code snippets
-- a shared clipboard/notepad/pastebin between computers
-- playlist manager for online media
-- feed other blogs, aggregators, social networks...
+- partager, commenter et enregistrer des liens intéressants
+- ajoutez des liens utiles/fréquents à vos favoris et partagez-les entre ordinateurs
+- une plateforme minimale de blog/microblog/écriture
+- une liste à lire plus tard/à faire
+- un bloc-notes pour rédiger et sauvegarder des articles/posts/idées
+- une base de connaissances pour conserver des notes, de la documentation et des extraits de code
+- un presse-papiers/bloc-notes/pastebin partagé entre ordinateurs
+- gestionnaire de playlist pour les médias en ligne
+- alimenter d'autres blogs, agrégateurs, réseaux sociaux...
