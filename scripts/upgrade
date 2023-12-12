@@ -21,52 +21,40 @@ upgrade_type=$(ynh_check_app_version_changed)
 
 if [ "$upgrade_type" == "UPGRADE_APP" ] || [ "$upgrade_type" == "UPGRADE_FORCED" ] # we should do that during a force upgrade too (as it could lead to a version upgrade for instance)
 then
-	ynh_script_progression --message="Upgrading source files..."
+	ynh_script_progression --message="Upgrading source files..." --weight=1
 
 	# Create a temporary directory
-	tmpdir="$(mktemp -d)"
+	#tmpdir="$(mktemp -d)"
 
 	# Backup the config file in the temp dir
-	cp -a "$install_dir/data" "$tmpdir/data"
-	cp -a "$install_dir/tpl" "$tmpdir/tpl"
+	#cp -a "$install_dir/data" "$tmpdir/data"
+	#cp -a "$install_dir/tpl" "$tmpdir/tpl"
 
 	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir"
+	ynh_setup_source --dest_dir="$install_dir" --keep="data tpl"
 
-	cp -a "$tmpdir/data" "$install_dir/"
-	cp -a -n "$tmpdir/tpl" "$install_dir/" # copy without erasing existing templates (from official source)
+	#cp -a "$tmpdir/data" "$install_dir/"
+	#cp -a -n "$tmpdir/tpl" "$install_dir/" # copy without erasing existing templates (from official source)
 
 	# Remove the tmp directory securely
-	ynh_secure_remove --file="$tmpdir"
+	#ynh_secure_remove --file="$tmpdir"
 fi
 
 chmod -R o-rwx "$install_dir"
 chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
-chmod 700 "$install_dir/data/config.json.php"
+#chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
-# PHP-FPM CONFIGURATION
+# REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading PHP-FPM configuration..."
+ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
 # Create a dedicated PHP-FPM config
-ynh_add_fpm_config --usage=low --footprint=low
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..."
+ynh_add_fpm_config
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
 # Temporary fix for .txt log file and ynh_use_logrotate
@@ -78,11 +66,6 @@ fi
 chown $app:www-data "$install_dir/data/log.txt"
 
 ynh_use_logrotate --non-append --specific_user=$app
-
-#=================================================
-# UPGRADE FAIL2BAN
-#=================================================
-ynh_script_progression --message="Reconfiguring Fail2Ban..."
 
 # Create a dedicated Fail2Ban config
 ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
