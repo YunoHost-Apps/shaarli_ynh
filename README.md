@@ -31,7 +31,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 - feed other blogs, aggregators, social networks...
 
 
-**Shipped version:** 0.12.2~ynh1
+**Shipped version:** 0.13.0~ynh1
 
 **Demo:** https://demo.shaarli.org/
 
