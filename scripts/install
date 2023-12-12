@@ -34,7 +34,7 @@ ynh_add_nginx_config
 
 # Use logrotate to manage application logfile(s)
 touch "$install_dir/data/log.txt"
-ynh_use_logrotate "$install_dir/data/log.txt" --specific_user=$app
+ynh_use_logrotate --logfile="$install_dir/data/log.txt" --specific_user=$app
 chown $app:www-data "$install_dir/data/log.txt"
 
 # Create a dedicated Fail2Ban config

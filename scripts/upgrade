@@ -65,7 +65,7 @@ then
 fi
 chown $app:www-data "$install_dir/data/log.txt"
 
-ynh_use_logrotate --non-append --specific_user=$app
+ynh_use_logrotate --logfile="$install_dir/data/log.txt" --non-append --specific_user=$app
 
 # Create a dedicated Fail2Ban config
 ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
