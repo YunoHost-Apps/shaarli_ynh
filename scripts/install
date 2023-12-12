@@ -12,7 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..."
+ynh_script_progression --message="Setting up source files..." --weight=1
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
@@ -22,27 +22,30 @@ chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
 chown -R $app:www-data "$install_dir"
 
 #=================================================
-# PHP-FPM CONFIGURATION
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring PHP-FPM..."
+ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
 
 # Create a dedicated PHP-FPM config
-ynh_add_fpm_config --usage=low --footprint=low
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring NGINX web server..."
+ynh_add_fpm_config
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
+
+# Use logrotate to manage application logfile(s)
+touch "$install_dir/data/log.txt"
+ynh_use_logrotate "$install_dir/data/log.txt" --specific_user=$app
+chown $app:www-data "$install_dir/data/log.txt"
+
+# Create a dedicated Fail2Ban config
+ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..."
+ynh_script_progression --message="Adding a configuration file..." --weight=1
 
 # Get the timezone
 timezone=$(cat /etc/timezone)
@@ -67,26 +70,6 @@ fi
 # Installing the config file and replace the placeholders
 ynh_add_config --template="../conf/config.json.php" --destination="$install_dir/data/config.json.php"
 chmod 700 "$install_dir/data/config.json.php"
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Configuring log rotation..."
-
-# Use logrotate to manage application logfile(s)
-touch "$install_dir/data/log.txt"
-ynh_use_logrotate "$install_dir/data/log.txt" --specific_user=$app
-chown $app:www-data "$install_dir/data/log.txt"
-
-#=================================================
-# SETUP FAIL2BAN
-#=================================================
-ynh_script_progression --message="Configuring Fail2Ban..."
-
-# Create a dedicated Fail2Ban config
-ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
 #=================================================
 # END OF SCRIPT
