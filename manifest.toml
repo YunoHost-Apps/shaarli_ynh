@@ -16,7 +16,7 @@ admindoc = "https://shaarli.readthedocs.io/en/master/"
 code = "https://github.com/shaarli/Shaarli"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 11.2.9"
 architectures = "all"
 multi_instance = true
 
