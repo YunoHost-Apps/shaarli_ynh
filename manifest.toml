@@ -5,7 +5,7 @@ name = "Shaarli"
 description.en = "Save, sort, synchronize and share web addresses"
 description.fr = "Sauvegarder, trier, synchroniser et partager des adresses web"
 
-version = "0.12.2~ynh1"
+version = "0.12.2~ynh2"
 
 maintainers = ["Lapineige"]
 
@@ -16,7 +16,7 @@ admindoc = "https://shaarli.readthedocs.io/en/master/"
 code = "https://github.com/shaarli/Shaarli"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 11.2.9"
 architectures = "all"
 multi_instance = true
 
