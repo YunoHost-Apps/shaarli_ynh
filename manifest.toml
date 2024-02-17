@@ -5,7 +5,7 @@ name = "Shaarli"
 description.en = "Save, sort, synchronize and share web addresses"
 description.fr = "Sauvegarder, trier, synchroniser et partager des adresses web"
 
-version = "0.13.0~ynh1"
+version = "v0.13.0~ynh1"
 
 maintainers = ["Lapineige"]
 
@@ -57,8 +57,8 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/shaarli/Shaarli/releases/download/v0.13.0/shaarli-v0.13.0-full.tar.gz"
-        sha256 = "fa2162736594677b7188344d46e9739f2980dea32a628bde3d778fe113161548"
+        url = "https://github.com/shaarli/Shaarli/archive/refs/tags/v0.13.0.tar.gz"
+        sha256 = "8eb7ffff8d3801366557b095c665a9e8f381fab0f021343b545d0fd3b3705d2c"
         autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
