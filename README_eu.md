@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # Shaarli YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/shaarli.svg)](https://dash.yunohost.org/appci/app/shaarli) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/ci/apps/shaarli/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
 
 [![Instalatu Shaarli YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
