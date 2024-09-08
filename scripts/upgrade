@@ -11,7 +11,7 @@ ynh_script_progression "Upgrading source files..."
 ynh_setup_source --dest_dir="$install_dir" --keep="data tpl"
 
 chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
-hmod 700 "$install_dir/data/config.json.php"
+chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
