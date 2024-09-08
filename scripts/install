@@ -8,49 +8,37 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression "Setting up source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
 chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:www-data "$install_dir"
+
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
 ynh_script_progression "Adding system configurations related to $app..."
 
-# Create a dedicated PHP-FPM config
 ynh_config_add_phpfpm
 
-# Create a dedicated NGINX config
 ynh_config_add_nginx
 
-# Use logrotate to manage application logfile(s)
 touch "$install_dir/data/log.txt"
 ynh_config_add_logrotate "$install_dir/data/log.txt"
 
 chown $app:www-data "$install_dir/data/log.txt"
 
-# Create a dedicated Fail2Ban config
 ynh_config_add_fail2ban --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
 ynh_script_progression "Adding $app's configuration..."
 
-# Get the timezone
 timezone=$(cat /etc/timezone)
 
-# Generate the salt
 salt=$(ynh_string_random --length=40)
 
-# Generate the hash with the password
 hash=$(echo -n "${password}${admin}${salt}" | sha1sum | awk '{print $1}')
 
-# Generate the API secret
 secret=$(ynh_string_random --length=64)
 
 # Set default_private_links. By default, make them public if the app is public.
@@ -63,7 +51,7 @@ fi
 
 # Installing the config file and replace the placeholders
 ynh_config_add --template="config.json.php" --destination="$install_dir/data/config.json.php"
-#REMOVEME? Assuming the file is setup using ynh_config_add, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod 700 "$install_dir/data/config.json.php"
+chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # END OF SCRIPT
