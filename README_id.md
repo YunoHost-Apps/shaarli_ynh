@@ -5,7 +5,9 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # Shaarli untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/ci/apps/shaarli/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/shaarli)](https://ci-apps.yunohost.org/ci/apps/shaarli/)
+![Status kerja](https://apps.yunohost.org/badge/state/shaarli)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/shaarli)
 
 [![Pasang Shaarli dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
@@ -31,7 +33,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 - feed other blogs, aggregators, social networks...
 
 
-**Versi terkirim:** 0.13.0~ynh1
+**Versi terkirim:** 0.14.0~ynh1
 
 **Demo:** <https://demo.shaarli.org/>
 
