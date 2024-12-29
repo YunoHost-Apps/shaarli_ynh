@@ -57,9 +57,10 @@ ram.runtime = "50M"
 
 [resources]
         [resources.sources.main]
-        url = "https://github.com/shaarli/Shaarli/archive/refs/tags/v0.14.0.tar.gz"
-        sha256 = "2bee9d7a104e6e03d0ca884b18bae20968b6c2de1b64c4e912924eab813203ad"
-        autoupdate.strategy = "latest_github_tag"
+        url = "https://github.com/shaarli/Shaarli/releases/download/v0.14.0/shaarli-v0.14.0-full.tar.gz"
+        sha256 = "bd34a362b75ee8e0d09c887bed49b831c47d33c28a5a7b88191184ed208c642d"
+        autoupdate.strategy = "latest_github_release"
+        autoupdate.asset = "shaarli-v\\d+(\\.\\d+)+-full\\.tar\\.gz"
 
     [resources.system_user]
 
