@@ -5,7 +5,9 @@ Il NE doit PAS être modifié à la main.
 
 # Shaarli pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/shaarli.svg)](https://dash.yunohost.org/appci/app/shaarli) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
+[![Niveau d’intégration](https://apps.yunohost.org/badge/integration/shaarli)](https://ci-apps.yunohost.org/ci/apps/shaarli/)
+![Statut du fonctionnement](https://apps.yunohost.org/badge/state/shaarli)
+![Statut de maintenance](https://apps.yunohost.org/badge/maintained/shaarli)
 
 [![Installer Shaarli avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
@@ -31,7 +33,7 @@ Shaarli est un gestionnaire de favoris minimaliste et un service de partage de l
 - alimenter d'autres blogs, agrégateurs, réseaux sociaux...
 
 
-**Version incluse :** 0.13.0~ynh1
+**Version incluse :** 0.14.0~ynh1
 
 **Démo :** <https://demo.shaarli.org/>
 
