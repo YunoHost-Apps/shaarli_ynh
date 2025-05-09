@@ -5,7 +5,9 @@ No se debe editar a mano.
 
 # Shaarli para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/ci/apps/shaarli/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/shaarli)](https://ci-apps.yunohost.org/ci/apps/shaarli/)
+![Estado funcional](https://apps.yunohost.org/badge/state/shaarli)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/shaarli)
 
 [![Instalar Shaarli con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
@@ -31,7 +33,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 - feed other blogs, aggregators, social networks...
 
 
-**Versión actual:** 0.13.0~ynh1
+**Versión actual:** 0.14.0~ynh1
 
 **Demo:** <https://demo.shaarli.org/>
 
@@ -48,7 +50,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/shaarli_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/shaarli_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 

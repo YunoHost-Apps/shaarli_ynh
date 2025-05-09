@@ -5,7 +5,9 @@
 
 # Shaarli для YunoHost
 
-[![Уровень интеграции](https://dash.yunohost.org/integration/shaarli.svg)](https://ci-apps.yunohost.org/ci/apps/shaarli/) ![Состояние работы](https://ci-apps.yunohost.org/ci/badges/shaarli.status.svg) ![Состояние сопровождения](https://ci-apps.yunohost.org/ci/badges/shaarli.maintain.svg)
+[![Уровень интеграции](https://apps.yunohost.org/badge/integration/shaarli)](https://ci-apps.yunohost.org/ci/apps/shaarli/)
+![Состояние работы](https://apps.yunohost.org/badge/state/shaarli)
+![Состояние сопровождения](https://apps.yunohost.org/badge/maintained/shaarli)
 
 [![Установите Shaarli с YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=shaarli)
 
@@ -31,7 +33,7 @@ Shaarli is a minimalist bookmark manager and link sharing service that you can i
 - feed other blogs, aggregators, social networks...
 
 
-**Поставляемая версия:** 0.13.0~ynh1
+**Поставляемая версия:** 0.14.0~ynh1
 
 **Демо-версия:** <https://demo.shaarli.org/>
 
