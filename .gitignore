@@ -4,3 +4,5 @@ sources/tmp
 *~
 sources-*
 
+*.sw[op]
+.DS_Store
