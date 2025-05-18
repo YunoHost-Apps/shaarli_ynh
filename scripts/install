@@ -48,7 +48,7 @@ ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s
 ynh_script_progression --message="Adding a configuration file..." --weight=1
 
 # Get the timezone
-timezone=$(cat /etc/timezone)
+timezone=$(timedatectl show --value --property=Timezone)
 
 # Generate the salt
 salt=$(ynh_string_random 40)
