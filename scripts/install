@@ -1,63 +1,46 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=1
+ynh_script_progression "Setting up source files..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
-chmod -R o-rwx "$install_dir"
 chmod -R u+rwX $install_dir/{cache/,data/,pagecache/,tmp/}
-chown -R $app:www-data "$install_dir"
 
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
-# Create a dedicated PHP-FPM config
-ynh_add_fpm_config
+ynh_config_add_phpfpm
 
-# Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
-# Use logrotate to manage application logfile(s)
 touch "$install_dir/data/log.txt"
-ynh_use_logrotate --logfile="$install_dir/data/log.txt" --specific_user=$app
+ynh_config_add_logrotate "$install_dir/data/log.txt"
+
 chown $app:www-data "$install_dir/data/log.txt"
 
-# Create a dedicated Fail2Ban config
-ynh_add_fail2ban_config --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
+ynh_config_add_fail2ban --logpath="$install_dir/data/log.txt" --failregex="\s-\s<HOST>\s-\sLogin failed for user.*$"
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # ADD A CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding a configuration file..." --weight=1
+ynh_script_progression "Adding $app's configuration..."
 
 # Get the timezone
 timezone=$(timedatectl show --value --property=Timezone)
 
-# Generate the salt
-salt=$(ynh_string_random 40)
+salt=$(ynh_string_random --length=40)
 
-# Generate the hash with the password
 hash=$(echo -n "${password}${admin}${salt}" | sha1sum | awk '{print $1}')
 
-# Generate the API secret
-secret=$(ynh_string_random 64)
+secret=$(ynh_string_random --length=64)
 
 # Set default_private_links. By default, make them public if the app is public.
 if ynh_permission_has_user --permission=main --user=visitors
@@ -68,11 +51,11 @@ else
 fi
 
 # Installing the config file and replace the placeholders
-ynh_add_config --template="../conf/config.json.php" --destination="$install_dir/data/config.json.php"
+ynh_config_add --template="config.json.php" --destination="$install_dir/data/config.json.php"
 chmod 700 "$install_dir/data/config.json.php"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed"
+ynh_script_progression "Installation of $app completed"
