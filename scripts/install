@@ -33,7 +33,8 @@ ynh_config_add_fail2ban --logpath="$install_dir/data/log.txt" --failregex="\s-\s
 #=================================================
 ynh_script_progression "Adding $app's configuration..."
 
-timezone=$(cat /etc/timezone)
+# Get the timezone
+timezone=$(timedatectl show --value --property=Timezone)
 
 salt=$(ynh_string_random --length=40)
 
