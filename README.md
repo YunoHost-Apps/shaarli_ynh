@@ -11,7 +11,7 @@ It shall NOT be edited by hand.
 Save, sort, synchronize and share web addresses
 
 [![App Demo](https://img.shields.io/badge/App_Demo-blue?style=for-the-badge)](https://demo.shaarli.org/)
-[![Version: 0.16.1~ynh1](https://img.shields.io/badge/Version-0.16.1~ynh1-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/shaarli/)
+[![Version: 0.16.2~ynh1](https://img.shields.io/badge/Version-0.16.2~ynh1-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/shaarli/)
 
 <div align="center">
 <a href="https://apps.yunohost.org/app/shaarli"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
